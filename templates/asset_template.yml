@@ -1,0 +1,68 @@
+# File Path: /templates/asset_template.yml
+# Copy this template when creating new assets manually
+---
+asset_id: "ASSET-XXX"
+codename: "CODENAME"
+real_name: "Full Name"
+classification: "CONFIDENTIAL"
+recruited_date: "2024-MM-DD"
+recruited_by: "Handler-Prime"
+
+description: "Background and description"
+background: "Professional history"
+image_url: ""
+
+location:
+  realm: "Mortal Coil"  # Mortal Coil, Winter Court, Summer Court, Hell, Abyss
+  region: "City, Area"
+  specific_area: ""
+  mobility: 
+    can_travel_realms: false
+    travel_time_hours: 0
+    requires_escort: false
+
+stats:
+  skill: 5          # General competence
+  stealth: 5        # Infiltration, staying hidden
+  combat: 5         # Physical confrontation
+  tech: 5           # Technology, hacking, analysis
+  social: 5         # Negotiation, manipulation
+  will: 5           # Mental fortitude, resistance
+
+costs:
+  recruitment_fee: 5000
+  monthly_salary: 2500
+  danger_bonus_multiplier: 1.2
+  realm_bonus: 0
+
+status:
+  current: "available"  # available/deployed/injured/captured/dead
+  since_date: "2024-MM-DD"
+  availability_date: null
+  deployment_details: null
+
+specializations: []
+
+condition:
+  injury_level: "none"     # none/minor/major/critical
+  injury_description: null
+  stat_penalties: {}
+  recovery_date: null
+  medical_notes: null
+
+equipment: []
+
+psychological:
+  loyalty: 8
+  corruption_resistance: 7
+  stress_tolerance: 6
+  quirks: []
+
+mission_history:
+  total_missions: 0
+  success_rate: 0
+  failures: 0
+  injuries_sustained: 0
+  commendations: []
+
+notes: ""
