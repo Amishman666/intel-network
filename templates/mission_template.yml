@@ -1,24 +1,23 @@
-# File Path: /templates/mission_template.yml
-# Copy this template when creating new missions manually
+# Enhanced Mission Template with Flexible Target and Resolution Data
 ---
 operation_id: "OP-YYYY-XXX"
 codename: "OPERATION NAME"
-classification: "CLASSIFIED"  # CLASSIFIED/SECRET/TOP SECRET/EYES ONLY
+classification: "CLASSIFIED"
 created_date: "2024-MM-DD"
 created_by: "Handler-Prime"
-priority: "MEDIUM"  # LOW/MEDIUM/HIGH/CRITICAL
+priority: "MEDIUM"
 
 objective:
   primary: "Main mission objective"
   secondary: []
 
 target:
-  location: 
-    realm: "Mortal Coil"
-    region: ""
-    specific: ""
-  difficulty: 5            # 1-10 scale
-  time_sensitivity: "MEDIUM"  # LOW/MEDIUM/HIGH/CRITICAL
+  # CHANGED: More flexible target system
+  realm: "Free form text - Chicago Outfit Headquarters"
+  organization: "Chicago Outfit"
+  location_details: "Specific building, person, or area"
+  difficulty: 5
+  time_sensitivity: "MEDIUM"
   
 requirements:
   minimum_agents: 1
@@ -38,7 +37,7 @@ timeline:
   deployment_window_end: "2024-MM-DDTHH:MM:SSZ"
   
 risks:
-  level: "MEDIUM"        # LOW/MEDIUM/HIGH/EXTREME
+  level: "MEDIUM"
   factors: []
   consequences:
     failure: "Mission failure consequences"
@@ -53,15 +52,31 @@ success_thresholds:
   partial_4: "71-85"
   complete_success: "86-100"
 
+# CHANGED: More detailed intelligence structure
 intelligence_rewards:
-  partial_1: []
-  partial_2: []
-  partial_3: []
-  partial_4: []
-  complete_success: []
+  partial_1:
+    - title: "Basic Information"
+      description: "Surface level intelligence"
+      tags: ["basic", "surveillance"]
+  partial_2:
+    - title: "Operational Details"
+      description: "More specific operational information"
+      tags: ["operations", "detailed"]
+  partial_3:
+    - title: "Strategic Intelligence"
+      description: "High-value strategic information"
+      tags: ["strategic", "valuable"]
+  partial_4:
+    - title: "Critical Intelligence"
+      description: "Mission-critical information"
+      tags: ["critical", "actionable"]
+  complete_success:
+    - title: "Complete Intelligence Package"
+      description: "All available information obtained"
+      tags: ["complete", "comprehensive"]
 
 deployment:
-  status: "PLANNING"        # PLANNING/ACTIVE/COMPLETED/ABORTED
+  status: "PLANNING"
   assigned_assets: []
   deployment_date: null
   expected_completion: null
@@ -69,7 +84,19 @@ deployment:
 results:
   completion_date: null
   success_level: null
-  intelligence_gathered: []
+  # CHANGED: Enhanced results tracking
+  intelligence_gathered:
+    - title: ""
+      description: ""
+      tags: []
+      gathered_date: ""
+      reliability: "HIGH"  # HIGH/MEDIUM/LOW/UNVERIFIED
   asset_status_changes: []
   complications: []
   handler_notes: null
+  # NEW: GM resolution data
+  gm_resolution:
+    actual_difficulty: null
+    story_notes: ""
+    follow_up_missions: []
+    faction_relations_changed: []
