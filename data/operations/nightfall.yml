@@ -1,0 +1,68 @@
+operation_id: OP-2025-660687
+codename: Nightfall
+classification: CLASSIFIED
+created_date: '2025-05-24'
+created_by: Handler-Prime
+priority: MEDIUM
+objective:
+  primary: Infiltrate Vermillion Invictus Group
+  secondary: []
+target:
+  location:
+    realm: Mortal Coil
+    region: ''
+    specific: ''
+  difficulty: 5
+  time_sensitivity: MEDIUM
+requirements:
+  minimum_agents: 1
+  required_stats:
+    skill: 0
+    stealth: 0
+    combat: 0
+    tech: 0
+    social: 0
+    will: 0
+  required_specializations: []
+  restricted_realms: []
+timeline:
+  estimated_duration_hours: 72
+  deployment_window_start: '2025-05-24T03:34:20.687Z'
+  deployment_window_end: '2025-05-31T03:34:20.687Z'
+risks:
+  level: MEDIUM
+  factors: []
+  consequences:
+    failure: Mission failure
+    partial_success: Limited intelligence gathered
+    success: Objectives completed
+success_thresholds:
+  total_failure: 0-25
+  partial_1: 26-40
+  partial_2: 41-55
+  partial_3: 56-70
+  partial_4: 71-85
+  complete_success: 86-100
+intelligence_rewards:
+  partial_1:
+    - Basic intelligence gathered
+  partial_2:
+    - Moderate intelligence gathered
+  partial_3:
+    - Good intelligence gathered
+  partial_4:
+    - Excellent intelligence gathered
+  complete_success:
+    - Complete intelligence package
+deployment:
+  status: ACTIVE
+  assigned_assets: []
+  deployment_date: null
+  expected_completion: null
+results:
+  completion_date: null
+  success_level: null
+  intelligence_gathered: []
+  asset_status_changes: []
+  complications: []
+  handler_notes: null
