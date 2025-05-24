@@ -10,7 +10,7 @@ class IntelligenceNetworkAPI {
     constructor(config = {}) {
         // GitHub repository configuration
         this.config = {
-            owner: 'your-username',     // REPLACE WITH YOUR GITHUB USERNAME
+            owner: 'Amishman666',     // REPLACE WITH YOUR GITHUB USERNAME
             repo: 'intelligence-network',
             branch: 'main',
             githubToken: config.githubToken || null, // Required for write operations
