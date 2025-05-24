@@ -10,8 +10,8 @@ class IntelligenceNetworkAPI {
     constructor(config = {}) {
         // GitHub repository configuration
         this.config = {
-            owner: 'Amishman666',     // REPLACE WITH YOUR GITHUB USERNAME
-            repo: 'intelligence-network',
+            owner: 'amishman666',     // Your actual GitHub username
+            repo: 'intel-network',    // Your actual repository name
             branch: 'main',
             githubToken: config.githubToken || null, // Required for write operations
             ...config
@@ -1038,8 +1038,8 @@ let intelligenceUI = null;
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize with your GitHub repository details
     intelligenceAPI = new IntelligenceNetworkAPI({
-        owner: 'your-username',     // Replace with your GitHub username
-        repo: 'intelligence-network', // Replace with your repository name
+        owner: 'amishman666',       // Your GitHub username
+        repo: 'intel-network',      // Your repository name
         branch: 'main'              // Or 'master' if that's your default branch
     });
     
