@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- File Path: /docs/index.html -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INTELLIGENCE NETWORK // COMMAND INTERFACE</title>
@@ -85,6 +86,42 @@
             color: var(--accent-blue);
             text-shadow: var(--glow-blue);
             letter-spacing: 2px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            box-shadow: var(--glow-blue);
+        }
+        
+        .nav-link.gm-link {
+            background: rgba(255, 51, 102, 0.1);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+        
+        .nav-link.gm-link:hover {
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
         }
         
         .status-bar {
@@ -233,6 +270,18 @@
             box-shadow: var(--glow-amber);
         }
         
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-green), #00cc66);
+            color: white;
+            border: 1px solid var(--accent-green);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent-red), #cc1144);
+            color: white;
+            border: 1px solid var(--accent-red);
+        }
+        
         .asset-card {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
@@ -337,11 +386,19 @@
             padding: 1rem;
             margin-bottom: 1rem;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         
         .mission-card:hover {
             border-left-color: var(--accent-blue);
             box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .mission-card.selected {
+            border-left-color: var(--accent-green);
+            background: rgba(0, 255, 136, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.2);
         }
         
         .mission-header {
@@ -418,6 +475,14 @@
         .risk-bar.active {
             background: var(--danger);
             box-shadow: 0 0 8px rgba(255, 51, 102, 0.5);
+        }
+        
+        .mission-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
         }
         
         .floating-particles {
@@ -517,6 +582,97 @@
             }
         }
         
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+            border: 2px solid var(--accent-blue);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+        
+        .modal-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: var(--accent-blue);
+        }
+        
+        .asset-selector {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .asset-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .asset-option:hover {
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        .asset-option.selected {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .asset-option.unavailable {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
         @media (max-width: 1024px) {
             .main-container {
                 grid-template-columns: 1fr;
@@ -533,6 +689,11 @@
                 flex-direction: column;
                 gap: 1rem;
             }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -544,6 +705,10 @@
             <div class="logo glitch" data-text="INTELLIGENCE NETWORK">
                 <i class="fas fa-satellite-dish"></i> INTELLIGENCE NETWORK
             </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link active">Player Interface</a>
+                <span class="nav-link gm-link" onclick="gmAccess()">GM Access</span>
+            </nav>
             <div class="status-bar">
                 <div class="status-item">
                     <span class="status-value">24</span>
@@ -570,7 +735,6 @@
             <div class="panel-header">
                 <h2 class="panel-title"><i class="fas fa-users"></i> Asset Roster</h2>
                 <div class="panel-actions">
-                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Recruit</button>
                     <button class="btn btn-secondary"><i class="fas fa-filter"></i> Filter</button>
                 </div>
             </div>
@@ -586,9 +750,8 @@
         
         <div class="panel">
             <div class="panel-header">
-                <h2 class="panel-title"><i class="fas fa-crosshairs"></i> Active Operations</h2>
+                <h2 class="panel-title"><i class="fas fa-crosshairs"></i> Available Operations</h2>
                 <div class="panel-actions">
-                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Deploy</button>
                     <button class="btn btn-secondary"><i class="fas fa-eye"></i> Intel</button>
                 </div>
             </div>
@@ -597,8 +760,73 @@
             <div class="operations-board-container">
                 <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
                     <i class="fas fa-satellite-dish fa-spin fa-2x"></i>
-                    <p style="margin-top: 1rem;">Loading active operations...</p>
+                    <p style="margin-top: 1rem;">Loading available operations...</p>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mission Assignment Modal -->
+    <div class="modal" id="missionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Deploy on Mission</h3>
+                <button class="close-btn" onclick="closeModal('missionModal')">&times;</button>
+            </div>
+            
+            <div id="selectedMissionInfo"></div>
+            
+            <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">
+                <i class="fas fa-users"></i> Select Assets to Deploy
+            </h4>
+            
+            <div class="asset-selector" id="assetSelector">
+                <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                    <i class="fas fa-users"></i>
+                    <p style="margin-top: 0.5rem;">Loading available assets...</p>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary);">
+                    <input type="checkbox" id="playerGoesOption" style="accent-color: var(--accent-blue);">
+                    <span>Include player character in this mission</span>
+                </label>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-success" style="flex: 1;" onclick="deploySelectedAssets()">
+                    <i class="fas fa-rocket"></i> Deploy Mission
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('missionModal')">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- GM Access Modal -->
+    <div class="modal" id="gmModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">GM Access Required</h3>
+                <button class="close-btn" onclick="closeModal('gmModal')">&times;</button>
+            </div>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 600;">
+                    Enter GM Password:
+                </label>
+                <input type="password" id="gmPassword" style="width: 100%; padding: 0.75rem; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-family: 'Rajdhani', sans-serif;" placeholder="Password">
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="checkGMPassword()">
+                    <i class="fas fa-unlock"></i> Access GM Interface
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('gmModal')">
+                    Cancel
+                </button>
             </div>
         </div>
     </div>
@@ -608,6 +836,188 @@
     <script src="js/data-loader.js"></script>
     
     <script>
+        let selectedMission = null;
+        let selectedAssets = new Set();
+        
+        // GM Access
+        function gmAccess() {
+            document.getElementById('gmModal').classList.add('active');
+            // Focus password input
+            setTimeout(() => {
+                document.getElementById('gmPassword').focus();
+            }, 100);
+        }
+        
+        function checkGMPassword() {
+            const password = document.getElementById('gmPassword').value;
+            if (password === 'Lastdrop1@') {
+                window.location.href = 'gm.html';
+            } else {
+                alert('Incorrect password. Access denied.');
+                document.getElementById('gmPassword').value = '';
+                document.getElementById('gmPassword').focus();
+            }
+        }
+        
+        // Mission Selection
+        function selectMission(mission) {
+            // Clear previous selection
+            document.querySelectorAll('.mission-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Select new mission
+            event.target.closest('.mission-card').classList.add('selected');
+            selectedMission = mission;
+            
+            // Open mission modal
+            openMissionModal(mission);
+        }
+        
+        function openMissionModal(mission) {
+            document.getElementById('missionModal').classList.add('active');
+            
+            // Update mission info
+            document.getElementById('selectedMissionInfo').innerHTML = `
+                <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid var(--accent-blue); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--accent-blue); margin-bottom: 0.5rem;">
+                        <i class="fas fa-crosshairs"></i> ${mission.codename}
+                    </h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                        ${mission.objective?.primary || 'Classified mission objective'}
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.9rem;">
+                        <div><strong>Target:</strong> ${mission.target?.location?.realm || 'Unknown'}</div>
+                        <div><strong>Risk Level:</strong> ${mission.risks?.level || 'MEDIUM'}</div>
+                        <div><strong>Duration:</strong> ${mission.timeline?.estimated_duration_hours || 24} hours</div>
+                        <div><strong>Classification:</strong> ${mission.classification || 'CLASSIFIED'}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Load available assets
+            loadAvailableAssetsForMission();
+        }
+        
+        async function loadAvailableAssetsForMission() {
+            try {
+                const assets = await intelligenceAPI.loadAssets();
+                const availableAssets = assets.filter(asset => 
+                    asset.status?.current === 'available'
+                );
+                
+                const container = document.getElementById('assetSelector');
+                container.innerHTML = '';
+                
+                if (availableAssets.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                            <i class="fas fa-users"></i>
+                            <p style="margin-top: 0.5rem;">No assets available for deployment</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                availableAssets.forEach(asset => {
+                    const option = document.createElement('div');
+                    option.className = 'asset-option';
+                    option.onclick = () => toggleAssetForMission(asset.asset_id, option);
+                    
+                    const realmInfo = intelligenceAPI.getRealmInfo(asset.location?.realm || 'Mortal Coil');
+                    
+                    option.innerHTML = `
+                        <div>
+                            <div style="font-weight: 600; color: var(--text-primary);">${asset.real_name || asset.codename}</div>
+                            <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                                <i class="${realmInfo.icon}" style="color: ${realmInfo.color};"></i>
+                                ${asset.location?.realm || 'Unknown'} - 
+                                Total Stats: ${Object.values(asset.stats || {}).reduce((sum, stat) => sum + stat, 0)}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Monthly: $${(asset.costs?.monthly_salary || 0).toLocaleString()}</div>
+                        </div>
+                    `;
+                    
+                    container.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Failed to load assets for mission:', error);
+            }
+        }
+        
+        function toggleAssetForMission(assetId, element) {
+            if (selectedAssets.has(assetId)) {
+                selectedAssets.delete(assetId);
+                element.classList.remove('selected');
+            } else {
+                selectedAssets.add(assetId);
+                element.classList.add('selected');
+            }
+        }
+        
+        async function deploySelectedAssets() {
+            if (!selectedMission) {
+                alert('No mission selected');
+                return;
+            }
+            
+            if (selectedAssets.size === 0 && !document.getElementById('playerGoesOption').checked) {
+                alert('Please select at least one asset or include the player character');
+                return;
+            }
+            
+            const playerGoes = document.getElementById('playerGoesOption').checked;
+            const assetCount = selectedAssets.size;
+            const totalDeployed = assetCount + (playerGoes ? 1 : 0);
+            
+            let confirmMessage = `Deploy ${totalDeployed} operative${totalDeployed > 1 ? 's' : ''} on ${selectedMission.codename}?\n\n`;
+            confirmMessage += `• ${assetCount} asset${assetCount !== 1 ? 's' : ''}\n`;
+            if (playerGoes) {
+                confirmMessage += `• Player character\n`;
+            }
+            confirmMessage += `\nThis mission has ${selectedMission.risks?.level || 'MEDIUM'} risk level.`;
+            
+            if (confirm(confirmMessage)) {
+                // For now, just show success message
+                // In a real implementation, this would update the mission status
+                alert(`Mission "${selectedMission.codename}" deployed successfully!\n\nAssets are now en route to ${selectedMission.target?.location?.realm || 'target location'}.`);
+                
+                // Close modal and reset
+                closeModal('missionModal');
+                selectedMission = null;
+                selectedAssets.clear();
+                
+                // Clear mission selection
+                document.querySelectorAll('.mission-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+            }
+        }
+        
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            
+            // Reset forms
+            if (modalId === 'missionModal') {
+                selectedAssets.clear();
+                document.getElementById('playerGoesOption').checked = false;
+                document.querySelectorAll('.asset-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+            }
+            
+            if (modalId === 'gmModal') {
+                document.getElementById('gmPassword').value = '';
+            }
+        }
+        
         // Create floating particles
         function createParticles() {
             const container = document.getElementById('particles');
@@ -626,11 +1036,10 @@
         // Initialize
         createParticles();
         
-        // Add interactive hover effects
+        // Enhanced hover effects and mission interaction
         document.addEventListener('DOMContentLoaded', function() {
-            // Enhanced hover effects
             setTimeout(() => {
-                document.querySelectorAll('.asset-card, .mission-card').forEach(card => {
+                document.querySelectorAll('.asset-card').forEach(card => {
                     card.addEventListener('mouseenter', function() {
                         this.style.transform = 'translateY(-4px) scale(1.02)';
                     });
@@ -647,6 +1056,21 @@
                 title.classList.add('typing-effect');
             });
         });
+        
+        // Enhanced mission card functionality
+        function enhanceMissionCards() {
+            document.querySelectorAll('.mission-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('selected')) {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    }
+                });
+            });
+        }
         
         // Update dashboard display
         async function updateDashboard(gameState) {
@@ -691,6 +1115,20 @@
                 }
             });
         }, 3000);
+        
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+        
+        // Enter key for password
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('gmModal').classList.contains('active')) {
+                checkGMPassword();
+            }
+        });
     </script>
 </body>
 </html>
