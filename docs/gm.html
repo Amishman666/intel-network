@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GM INTERFACE // INTELLIGENCE NETWORK</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --primary-bg: #0a0b0d;
+            --secondary-bg: #1a1d23;
+            --tertiary-bg: #252830;
+            --accent-red: #ff3366;
+            --accent-amber: #ffa500;
+            --accent-blue: #00d4ff;
+            --accent-green: #00ff88;
+            --text-primary: #ffffff;
+            --text-secondary: #b8bcc8;
+            --text-muted: #6c7293;
+            --border-color: #3d4147;
+            --glow-red: 0 0 20px rgba(255, 51, 102, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 51, 102, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.03) 0%, transparent 50%);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+            border-bottom: 2px solid var(--accent-red);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--accent-red);
+            text-shadow: var(--glow-red);
+            letter-spacing: 2px;
+        }
+        
+        .gm-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .panel {
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+        
+        .panel-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-red), #cc1144);
+            color: white;
+            border: 1px solid var(--accent-red);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: var(--glow-red);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 165, 0, 0.1);
+            color: var(--accent-amber);
+            border: 1px solid var(--accent-amber);
+        }
+        
+        .btn-success {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.2);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .stats-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .quick-action-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .quick-action-card:hover {
+            border-color: var(--accent-red);
+            box-shadow: 0 4px 20px rgba(255, 51, 102, 0.2);
+        }
+        
+        .quick-action-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .quick-action-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .mission-resolution-panel {
+            background: linear-gradient(135deg, rgba(255, 51, 102, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+            border: 2px solid var(--accent-red);
+        }
+        
+        .resolution-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .resolution-btn {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .resolution-btn:hover {
+            border-color: var(--accent-red);
+            background: rgba(255, 51, 102, 0.1);
+        }
+        
+        .resolution-btn.selected {
+            border-color: var(--accent-red);
+            background: rgba(255, 51, 102, 0.2);
+            box-shadow: var(--glow-red);
+        }
+        
+        .active-mission {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid var(--accent-amber);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .mission-name {
+            font-weight: 700;
+            color: var(--accent-amber);
+            margin-bottom: 0.5rem;
+        }
+        
+        .mission-details {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .timer-display {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-family: 'Orbitron', monospace;
+            color: var(--accent-amber);
+            text-align: center;
+        }
+        
+        .asset-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .asset-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .asset-item:hover {
+            border-color: var(--accent-red);
+        }
+        
+        .asset-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .asset-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-available {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-green);
+        }
+        
+        .status-deployed {
+            background: rgba(255, 165, 0, 0.2);
+            color: var(--accent-amber);
+        }
+        
+        .status-injured {
+            background: rgba(255, 51, 102, 0.2);
+            color: var(--accent-red);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+            border: 2px solid var(--accent-red);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+        
+        .modal-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-red);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: var(--accent-red);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-cog"></i> GM COMMAND INTERFACE
+            </div>
+            <div class="gm-actions">
+                <button class="btn btn-primary" onclick="openModal('assetModal')">
+                    <i class="fas fa-user-plus"></i> Create Asset
+                </button>
+                <button class="btn btn-primary" onclick="openModal('missionModal')">
+                    <i class="fas fa-crosshairs"></i> Create Mission
+                </button>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-save"></i> Save State
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="main-container">
+        <div class="panel">
+            <div class="panel-header">
+                <h2 class="panel-title"><i class="fas fa-bolt"></i> Quick Actions</h2>
+            </div>
+            
+            <div class="quick-action-card" onclick="processPayroll()">
+                <div class="quick-action-title">Process Monthly Payroll</div>
+                <div class="quick-action-desc">Deduct monthly costs from treasury</div>
+            </div>
+            
+            <div class="quick-action-card" onclick="advanceTime()">
+                <div class="quick-action-title">Advance Time (24h)</div>
+                <div class="quick-action-desc">Progress all mission timers by one day</div>
+            </div>
+            
+            <div class="quick-action-card" onclick="generateRandomEvent()">
+                <div class="quick-action-title">Generate Random Event</div>
+                <div class="quick-action-desc">Create unexpected complication or opportunity</div>
+            </div>
+            
+            <div class="quick-action-card" onclick="openModal('treasuryModal')">
+                <div class="quick-action-title">Adjust Treasury</div>
+                <div class="quick-action-desc">Add/remove funds from network budget</div>
+            </div>
+            
+            <div class="quick-action-card" onclick="setAlertLevel()">
+                <div class="quick-action-title">Change Alert Level</div>
+                <div class="quick-action-desc">Modify DEFCON status and security measures</div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <div class="panel-header">
+                <h2 class="panel-title"><i class="fas fa-clock"></i> Active Missions</h2>
+            </div>
+            
+            <div class="active-mission">
+                <div class="mission-name">Operation: Nightfall</div>
+                <div class="mission-details">
+                    Assets: Vera Shadowmere, Agent Unknown<br>
+                    Target: Winter Court Intelligence
+                </div>
+                <div class="timer-display">
+                    <i class="fas fa-hourglass-half"></i> 47:23:15 REMAINING
+                </div>
+                <button class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;" 
+                        onclick="openMissionResolution('OP-2024-047')">
+                    RESOLVE MISSION
+                </button>
+            </div>
+            
+            <div class="active-mission">
+                <div class="mission-name">Operation: Crimson Dawn</div>
+                <div class="mission-details">
+                    Assets: Dmitri "The Broker"<br>
+                    Target: Hell Embassy Surveillance
+                </div>
+                <div class="timer-display">
+                    <i class="fas fa-hourglass-half"></i> 132:45:22 REMAINING
+                </div>
+                <button class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;" 
+                        onclick="openMissionResolution('OP-2024-048')">
+                    RESOLVE MISSION
+                </button>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <div class="panel-header">
+                <h2 class="panel-title"><i class="fas fa-users-cog"></i> Asset Management</h2>
+            </div>
+            
+            <div class="asset-list">
+                <div class="asset-item">
+                    <div>
+                        <div class="asset-name">Marcus Blackthorne</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Mortal Coil - Chicago</div>
+                    </div>
+                    <div class="asset-status status-available">Available</div>
+                </div>
+                
+                <div class="asset-item">
+                    <div>
+                        <div class="asset-name">Vera Shadowmere</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Winter Court</div>
+                    </div>
+                    <div class="asset-status status-deployed">Deployed</div>
+                </div>
+                
+                <div class="asset-item">
+                    <div>
+                        <div class="asset-name">Dmitri "The Broker"</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Hell - Fifth Circle</div>
+                    </div>
+                    <div class="asset-status status-injured">Injured</div>
+                </div>
+            </div>
+            
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">
+                <i class="fas fa-edit"></i> Bulk Edit Assets
+            </button>
+        </div>
+    </div>
+    
+    <!-- Mission Resolution Panel -->
+    <div class="panel mission-resolution-panel" id="resolutionPanel" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1500; width: 500px;">
+        <div class="panel-header">
+            <h2 class="panel-title"><i class="fas fa-gavel"></i> Mission Resolution</h2>
+            <button class="close-btn" onclick="closeMissionResolution()">&times;</button>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Mission Outcome</label>
+            <div class="resolution-options">
+                <div class="resolution-btn" data-outcome="failure">
+                    <i class="fas fa-times"></i><br>Total Failure
+                </div>
+                <div class="resolution-btn" data-outcome="partial1">
+                    <i class="fas fa-star"></i><br>Partial Success 1
+                </div>
+                <div class="resolution-btn" data-outcome="partial2">
+                    <i class="fas fa-star"></i><br>Partial Success 2
+                </div>
+                <div class="resolution-btn" data-outcome="partial3">
+                    <i class="fas fa-star"></i><br>Partial Success 3
+                </div>
+                <div class="resolution-btn" data-outcome="partial4">
+                    <i class="fas fa-star"></i><br>Partial Success 4
+                </div>
+                <div class="resolution-btn" data-outcome="success">
+                    <i class="fas fa-trophy"></i><br>Complete Success
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Asset Consequences</label>
+            <select class="form-select" id="assetConsequence">
+                <option value="none">No consequences</option>
+                <option value="injured">Asset injured</option>
+                <option value="captured">Asset captured</option>
+                <option value="dead">Asset deceased</option>
+                <option value="promoted">Asset commended</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">GM Notes</label>
+            <textarea class="form-textarea" placeholder="Additional details, complications, or story hooks..."></textarea>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+            <button class="btn btn-success" style="flex: 1;" onclick="resolveMission()">
+                <i class="fas fa-check"></i> Resolve Mission
+            </button>
+            <button class="btn btn-secondary" onclick="autoResolve()">
+                <i class="fas fa-dice"></i> Auto-Resolve
+            </button>
+        </div>
+    </div>
+    
+    <!-- Asset Creation Modal -->
+    <div class="modal" id="assetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Asset</h3>
+                <button class="close-btn" onclick="closeModal('assetModal')">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Asset Name</label>
+                <input type="text" class="form-input" placeholder="Enter asset name...">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Codename</label>
+                <input type="text" class="form-input" placeholder="Enter codename...">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Location</label>
+                <select class="form-select">
+                    <option value="mortal_coil">Mortal Coil</option>
+                    <option value="winter_court">Winter Court - Never Never</option>
+                    <option value="summer_court">Summer Court - Never Never</option>
+                    <option value="hell">Hell</option>
+                    <option value="abyss">Abyss</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Stats</label>
+                <div class="stats-input-grid">
+                    <div>
+                        <label class="form-label" style="margin-bottom: 0.25rem;">Skill</label>
+                        <input type="number" class="form-input" min="1" max="10" value="5">
+                    </div>
+                    <div>
+                        <label class="form-label" style="margin-bottom: 0.25rem;">Stealth</label>
+                        <input type="number" class="form-input" min="1" max="10" value="5">
+                    </div>
+                    <div>
+                        <label class="form-label" style="margin-bottom: 0.25rem;">Combat</label>
+                        <input type="number" class="form-input" min="1" max="10" value="5">
+                    </div>
+                    <div>
+                        <label class="form-label" style="margin-bottom: 0.25rem;">Tech</label>
+                        <input type="number" class="form-input" min="1" max="10" value="5">
+                    </div>
+                    <div>
+                        <label class="form-label" style="margin-bottom: 0.25rem;">Social</label>
+                        <input type="number" class="form-input" min="1" max="10" value="5">
+                    </div>
+                    <div>
+                        <label class="form-label" style="margin-bottom: 0.25rem;">Will</label>
+                        <input type="number" class="form-input" min="1" max="10" value="5">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Monthly Salary ($)</label>
+                <input type="number" class="form-input" placeholder="2500">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-textarea" placeholder="Background, abilities, quirks..."></textarea>
+            </div>
+            
+            <button class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-plus"></i> Create Asset
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        let selectedResolution = null;
+        
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        function openMissionResolution(missionId) {
+            document.getElementById('resolutionPanel').style.display = 'block';
+        }
+        
+        function closeMissionResolution() {
+            document.getElementById('resolutionPanel').style.display = 'none';
+            selectedResolution = null;
+            document.querySelectorAll('.resolution-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+        }
+        
+        // Resolution button selection
+        document.querySelectorAll('.resolution-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.resolution-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedResolution = this.dataset.outcome;
+            });
+        });
+        
+        function resolveMission() {
+            if (!selectedResolution) {
+                alert('Please select a mission outcome first.');
+                return;
+            }
+            
+            // Here you would update the game state files
+            alert(`Mission resolved with outcome: ${selectedResolution}`);
+            closeMissionResolution();
+        }
+        
+        function autoResolve() {
+            // Simulate automatic resolution based on asset stats vs mission difficulty
+            const outcomes = ['failure', 'partial1', 'partial2', 'partial3', 'partial4', 'success'];
+            const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+            
+            // Highlight the selected outcome
+            document.querySelectorAll('.resolution-btn').forEach(b => b.classList.remove('selected'));
+            document.querySelector(`[data-outcome="${randomOutcome}"]`).classList.add('selected');
+            selectedResolution = randomOutcome;
+            
+            alert(`Auto-resolved with outcome: ${randomOutcome}`);
+        }
+        
+        function processPayroll() {
+            if (confirm('Process monthly payroll? This will deduct asset salaries from treasury.')) {
+                alert('Payroll processed. Treasury updated.');
+            }
+        }
+        
+        function advanceTime() {
+            if (confirm('Advance time by 24 hours? This will progress all mission timers.')) {
+                alert('Time advanced. Mission timers updated.');
+            }
+        }
+        
+        function generateRandomEvent() {
+            const events = [
+                'A rival intelligence network has been detected in your territory',
+                'One of your assets has discovered a major supernatural threat',
+                'Political tensions in the Never Never have escalated',
+                'A wealthy patron offers funding in exchange for a favor',
+                'Law enforcement is investigating supernatural activities'
+            ];
+            
+            const randomEvent = events[Math.floor(Math.random() * events.length)];
+            alert(`Random Event Generated:\n\n${randomEvent}`);
+        }
+        
+        function setAlertLevel() {
+            const levels = ['DEFCON 1', 'DEFCON 2', 'DEFCON 3', 'DEFCON 4', 'DEFCON 5'];
+            const selected = prompt('Enter new alert level:\n1 = DEFCON 1 (Maximum Readiness)\n2 = DEFCON 2 (High Readiness)\n3 = DEFCON 3 (Increased Readiness)\n4 = DEFCON 4 (Normal Readiness)\n5 = DEFCON 5 (Minimum Readiness)');
+            
+            if (selected && selected >= 1 && selected <= 5) {
+                alert(`Alert level changed to ${levels[selected - 1]}`);
+            }
+        }
+        
+        // Simulate real-time timer updates
+        setInterval(() => {
+            const timers = document.querySelectorAll('.timer-display');
+            timers.forEach(timer => {
+                // This would connect to actual mission data in a real implementation
+                const timeText = timer.textContent;
+                if (timeText.includes('REMAINING')) {
+                    // Simulate countdown
+                    timer.style.color = Math.random() > 0.5 ? '#ffa500' : '#00d4ff';
+                }
+            });
+        }, 1000);
+        
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
