@@ -1,0 +1,75 @@
+# File Path: /templates/mission_template.yml
+# Copy this template when creating new missions manually
+---
+operation_id: "OP-YYYY-XXX"
+codename: "OPERATION NAME"
+classification: "CLASSIFIED"  # CLASSIFIED/SECRET/TOP SECRET/EYES ONLY
+created_date: "2024-MM-DD"
+created_by: "Handler-Prime"
+priority: "MEDIUM"  # LOW/MEDIUM/HIGH/CRITICAL
+
+objective:
+  primary: "Main mission objective"
+  secondary: []
+
+target:
+  location: 
+    realm: "Mortal Coil"
+    region: ""
+    specific: ""
+  difficulty: 5            # 1-10 scale
+  time_sensitivity: "MEDIUM"  # LOW/MEDIUM/HIGH/CRITICAL
+  
+requirements:
+  minimum_agents: 1
+  required_stats:
+    skill: 0
+    stealth: 0
+    combat: 0
+    tech: 0
+    social: 0
+    will: 0
+  required_specializations: []
+  restricted_realms: []
+
+timeline:
+  estimated_duration_hours: 24
+  deployment_window_start: "2024-MM-DDTHH:MM:SSZ"
+  deployment_window_end: "2024-MM-DDTHH:MM:SSZ"
+  
+risks:
+  level: "MEDIUM"        # LOW/MEDIUM/HIGH/EXTREME
+  factors: []
+  consequences:
+    failure: "Mission failure consequences"
+    partial_success: "Limited success consequences"
+    success: "Full success results"
+
+success_thresholds:
+  total_failure: "0-25"
+  partial_1: "26-40"
+  partial_2: "41-55"
+  partial_3: "56-70"
+  partial_4: "71-85"
+  complete_success: "86-100"
+
+intelligence_rewards:
+  partial_1: []
+  partial_2: []
+  partial_3: []
+  partial_4: []
+  complete_success: []
+
+deployment:
+  status: "PLANNING"        # PLANNING/ACTIVE/COMPLETED/ABORTED
+  assigned_assets: []
+  deployment_date: null
+  expected_completion: null
+  
+results:
+  completion_date: null
+  success_level: null
+  intelligence_gathered: []
+  asset_status_changes: []
+  complications: []
+  handler_notes: null
