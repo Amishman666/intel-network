@@ -290,7 +290,7 @@
             text-align: center;
         }
         
-        .asset-list {
+        .asset-management-list {
             max-height: 300px;
             overflow-y: auto;
         }
@@ -454,34 +454,12 @@
                 <h2 class="panel-title"><i class="fas fa-clock"></i> Active Missions</h2>
             </div>
             
-            <div class="active-mission">
-                <div class="mission-name">Operation: Nightfall</div>
-                <div class="mission-details">
-                    Assets: Vera Shadowmere, Agent Unknown<br>
-                    Target: Winter Court Intelligence
+            <!-- Active missions will be dynamically loaded here -->
+            <div class="active-missions-container">
+                <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                    <i class="fas fa-satellite-dish fa-spin fa-2x"></i>
+                    <p style="margin-top: 1rem;">Loading active operations...</p>
                 </div>
-                <div class="timer-display">
-                    <i class="fas fa-hourglass-half"></i> 47:23:15 REMAINING
-                </div>
-                <button class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;" 
-                        onclick="openMissionResolution('OP-2024-047')">
-                    RESOLVE MISSION
-                </button>
-            </div>
-            
-            <div class="active-mission">
-                <div class="mission-name">Operation: Crimson Dawn</div>
-                <div class="mission-details">
-                    Assets: Dmitri "The Broker"<br>
-                    Target: Hell Embassy Surveillance
-                </div>
-                <div class="timer-display">
-                    <i class="fas fa-hourglass-half"></i> 132:45:22 REMAINING
-                </div>
-                <button class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;" 
-                        onclick="openMissionResolution('OP-2024-048')">
-                    RESOLVE MISSION
-                </button>
             </div>
         </div>
         
@@ -490,29 +468,11 @@
                 <h2 class="panel-title"><i class="fas fa-users-cog"></i> Asset Management</h2>
             </div>
             
-            <div class="asset-list">
-                <div class="asset-item">
-                    <div>
-                        <div class="asset-name">Marcus Blackthorne</div>
-                        <div style="font-size: 0.8rem; color: var(--text-muted);">Mortal Coil - Chicago</div>
-                    </div>
-                    <div class="asset-status status-available">Available</div>
-                </div>
-                
-                <div class="asset-item">
-                    <div>
-                        <div class="asset-name">Vera Shadowmere</div>
-                        <div style="font-size: 0.8rem; color: var(--text-muted);">Winter Court</div>
-                    </div>
-                    <div class="asset-status status-deployed">Deployed</div>
-                </div>
-                
-                <div class="asset-item">
-                    <div>
-                        <div class="asset-name">Dmitri "The Broker"</div>
-                        <div style="font-size: 0.8rem; color: var(--text-muted);">Hell - Fifth Circle</div>
-                    </div>
-                    <div class="asset-status status-injured">Injured</div>
+            <!-- Asset list will be dynamically loaded here -->
+            <div class="asset-management-list">
+                <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                    <i class="fas fa-satellite-dish fa-spin fa-2x"></i>
+                    <p style="margin-top: 1rem;">Loading asset roster...</p>
                 </div>
             </div>
             
@@ -654,8 +614,117 @@
         </div>
     </div>
     
+    <!-- Load dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="js/data-loader.js"></script>
+    
     <script>
         let selectedResolution = null;
+        let currentMissionId = null;
+        
+        // Initialize GM interface
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGMData();
+        });
+        
+        async function loadGMData() {
+            try {
+                showLoadingState();
+                
+                // Load all data
+                const [assets, operations, gameState] = await Promise.all([
+                    intelligenceAPI.loadAssets(),
+                    intelligenceAPI.loadOperations(),
+                    intelligenceAPI.loadGameState()
+                ]);
+                
+                // Populate GM interface
+                await populateActiveMissions(operations);
+                await populateAssetManagement(assets);
+                
+                hideLoadingState();
+                console.log('GM Interface loaded successfully');
+                
+            } catch (error) {
+                console.error('Failed to load GM interface:', error);
+                showErrorState(error);
+            }
+        }
+        
+        async function populateActiveMissions(operations) {
+            const container = document.querySelector('.active-missions-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const activeOps = operations.filter(op => op.deployment?.status === 'ACTIVE');
+            
+            if (activeOps.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        <i class="fas fa-inbox fa-2x"></i>
+                        <p style="margin-top: 1rem;">No active operations</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            activeOps.forEach(operation => {
+                const timeRemaining = intelligenceAPI.calculateTimeRemaining(operation);
+                const assignedAssets = operation.deployment?.assigned_assets || [];
+                
+                const missionCard = document.createElement('div');
+                missionCard.className = 'active-mission';
+                missionCard.innerHTML = `
+                    <div class="mission-name">${operation.codename}</div>
+                    <div class="mission-details">
+                        Assets: ${assignedAssets.length} deployed<br>
+                        Target: ${operation.objective?.primary || 'Classified'}
+                    </div>
+                    ${timeRemaining ? `
+                        <div class="timer-display">
+                            <i class="fas fa-hourglass-half"></i> ${timeRemaining.display}
+                        </div>
+                    ` : ''}
+                    <button class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;" 
+                            onclick="openMissionResolution('${operation.operation_id}')">
+                        RESOLVE MISSION
+                    </button>
+                `;
+                
+                container.appendChild(missionCard);
+            });
+        }
+        
+        async function populateAssetManagement(assets) {
+            const container = document.querySelector('.asset-management-list');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            assets.forEach(asset => {
+                const statusClass = `status-${asset.status?.current || 'available'}`;
+                const statusText = asset.status?.current?.charAt(0).toUpperCase() + 
+                                 asset.status?.current?.slice(1) || 'Available';
+                
+                const assetItem = document.createElement('div');
+                assetItem.className = 'asset-item';
+                assetItem.innerHTML = `
+                    <div>
+                        <div class="asset-name">${asset.real_name || asset.codename}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">
+                            ${asset.location?.realm} - ${asset.location?.region || 'Unknown'}
+                        </div>
+                    </div>
+                    <div class="asset-status ${statusClass}">${statusText}</div>
+                `;
+                
+                // Add click handler for asset editing
+                assetItem.addEventListener('click', () => openAssetEditor(asset));
+                
+                container.appendChild(assetItem);
+            });
+        }
         
         function openModal(modalId) {
             document.getElementById(modalId).classList.add('active');
@@ -666,59 +735,146 @@
         }
         
         function openMissionResolution(missionId) {
+            currentMissionId = missionId;
             document.getElementById('resolutionPanel').style.display = 'block';
         }
         
         function closeMissionResolution() {
             document.getElementById('resolutionPanel').style.display = 'none';
             selectedResolution = null;
+            currentMissionId = null;
             document.querySelectorAll('.resolution-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
         }
         
         // Resolution button selection
-        document.querySelectorAll('.resolution-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.resolution-btn').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedResolution = this.dataset.outcome;
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.resolution-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.resolution-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedResolution = this.dataset.outcome;
+                });
             });
         });
         
-        function resolveMission() {
-            if (!selectedResolution) {
+        async function resolveMission() {
+            if (!selectedResolution || !currentMissionId) {
                 alert('Please select a mission outcome first.');
                 return;
             }
             
-            // Here you would update the game state files
-            alert(`Mission resolved with outcome: ${selectedResolution}`);
-            closeMissionResolution();
+            try {
+                const operation = await intelligenceAPI.getOperation(currentMissionId);
+                if (!operation) {
+                    alert('Mission not found!');
+                    return;
+                }
+                
+                const assetConsequence = document.getElementById('assetConsequence').value;
+                const gmNotes = document.querySelector('#resolutionPanel textarea').value;
+                
+                // Here you would update the GitHub files
+                // For now, simulate the resolution
+                const result = simulateMissionResolution(operation, selectedResolution, assetConsequence);
+                
+                alert(`Mission "${operation.codename}" resolved!\n\nOutcome: ${selectedResolution}\nIntel gathered: ${result.intelGathered.length} items\nAsset consequences: ${assetConsequence}`);
+                
+                closeMissionResolution();
+                
+                // Refresh the interface
+                await loadGMData();
+                
+            } catch (error) {
+                console.error('Mission resolution failed:', error);
+                alert('Failed to resolve mission. Check console for details.');
+            }
+        }
+        
+        function simulateMissionResolution(operation, outcome, consequences) {
+            // Simulate mission resolution logic
+            const intelRewards = operation.intelligence_rewards?.[outcome.replace('partial', 'partial_')] || [];
+            
+            return {
+                outcome,
+                intelGathered: intelRewards,
+                assetConsequences: consequences,
+                completionDate: new Date().toISOString()
+            };
         }
         
         function autoResolve() {
+            if (!currentMissionId) {
+                alert('No mission selected.');
+                return;
+            }
+            
             // Simulate automatic resolution based on asset stats vs mission difficulty
             const outcomes = ['failure', 'partial1', 'partial2', 'partial3', 'partial4', 'success'];
-            const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+            const weights = [5, 15, 25, 25, 20, 10]; // Weighted towards partial success
+            
+            let totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+            let random = Math.random() * totalWeight;
+            let selectedIndex = 0;
+            
+            for (let i = 0; i < weights.length; i++) {
+                random -= weights[i];
+                if (random <= 0) {
+                    selectedIndex = i;
+                    break;
+                }
+            }
+            
+            const randomOutcome = outcomes[selectedIndex];
             
             // Highlight the selected outcome
             document.querySelectorAll('.resolution-btn').forEach(b => b.classList.remove('selected'));
             document.querySelector(`[data-outcome="${randomOutcome}"]`).classList.add('selected');
             selectedResolution = randomOutcome;
             
-            alert(`Auto-resolved with outcome: ${randomOutcome}`);
+            // Auto-select asset consequences based on outcome
+            const consequenceSelect = document.getElementById('assetConsequence');
+            if (randomOutcome === 'failure') {
+                consequenceSelect.value = Math.random() < 0.7 ? 'injured' : 'captured';
+            } else if (randomOutcome === 'success') {
+                consequenceSelect.value = Math.random() < 0.3 ? 'promoted' : 'none';
+            } else {
+                consequenceSelect.value = Math.random() < 0.1 ? 'injured' : 'none';
+            }
+            
+            alert(`Auto-resolved with outcome: ${randomOutcome.toUpperCase()}`);
         }
         
-        function processPayroll() {
+        async function processPayroll() {
             if (confirm('Process monthly payroll? This will deduct asset salaries from treasury.')) {
-                alert('Payroll processed. Treasury updated.');
+                try {
+                    const assets = await intelligenceAPI.loadAssets();
+                    const gameState = await intelligenceAPI.loadGameState();
+                    
+                    const totalCosts = assets.reduce((sum, asset) => 
+                        sum + (asset.costs?.monthly_salary || 0), 0
+                    );
+                    
+                    const currentFunds = gameState.treasury?.current_funds || 0;
+                    const newFunds = currentFunds - totalCosts;
+                    
+                    alert(`Payroll processed!\n\nTotal costs: ${totalCosts.toLocaleString()}\nRemaining treasury: ${newFunds.toLocaleString()}`);
+                    
+                    // Here you would update the game_state.yml file
+                    
+                } catch (error) {
+                    console.error('Payroll processing failed:', error);
+                    alert('Failed to process payroll.');
+                }
             }
         }
         
         function advanceTime() {
             if (confirm('Advance time by 24 hours? This will progress all mission timers.')) {
                 alert('Time advanced. Mission timers updated.');
+                // Here you would update all mission timers
+                loadGMData(); // Refresh interface
             }
         }
         
@@ -728,11 +884,15 @@
                 'One of your assets has discovered a major supernatural threat',
                 'Political tensions in the Never Never have escalated',
                 'A wealthy patron offers funding in exchange for a favor',
-                'Law enforcement is investigating supernatural activities'
+                'Law enforcement is investigating supernatural activities',
+                'An asset has gone dark - last known location unknown',
+                'Intel suggests a major supernatural summit is being planned',
+                'Strange energy readings detected in multiple realms',
+                'A new faction has emerged in the supernatural underground'
             ];
             
             const randomEvent = events[Math.floor(Math.random() * events.length)];
-            alert(`Random Event Generated:\n\n${randomEvent}`);
+            alert(`Random Event Generated:\n\n${randomEvent}\n\nConsider how this affects ongoing operations and asset safety.`);
         }
         
         function setAlertLevel() {
@@ -741,7 +901,29 @@
             
             if (selected && selected >= 1 && selected <= 5) {
                 alert(`Alert level changed to ${levels[selected - 1]}`);
+                // Here you would update the game_state.yml file
             }
+        }
+        
+        function openAssetEditor(asset) {
+            // For now, show asset details in alert
+            const details = `
+Asset: ${asset.real_name || asset.codename}
+Location: ${asset.location?.realm} - ${asset.location?.region}
+Status: ${asset.status?.current || 'available'}
+Monthly Cost: ${(asset.costs?.monthly_salary || 0).toLocaleString()}
+
+Stats:
+Skill: ${asset.stats?.skill || 0}
+Stealth: ${asset.stats?.stealth || 0}
+Combat: ${asset.stats?.combat || 0}
+Tech: ${asset.stats?.tech || 0}
+Social: ${asset.stats?.social || 0}
+Will: ${asset.stats?.will || 0}
+            `;
+            
+            alert(details);
+            // In a full implementation, this would open an asset editing modal
         }
         
         // Simulate real-time timer updates
@@ -758,11 +940,13 @@
         }, 1000);
         
         // Close modals when clicking outside
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('active');
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
             });
         });
     </script>
