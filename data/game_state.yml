@@ -1,0 +1,21 @@
+# Game State
+game_info:
+  campaign_name: "Shadows of Chicago"
+  start_date: "2024-01-15"
+  current_date: "2024-05-23"
+  game_master: "Handler-Prime"
+  
+treasury:
+  current_funds: 500000
+  monthly_income: 125000
+  monthly_expenses: 0
+  
+security:
+  alert_level: "DEFCON 3"
+  threat_assessment: "NORMAL"
+  
+network_stats:
+  total_assets: 0
+  available_assets: 0
+  deployed_assets: 0
+  active_operations: 0
