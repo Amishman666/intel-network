@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- File Path: /docs/gm.html -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GM COMMAND CENTER // INTELLIGENCE NETWORK</title>
+    <title>MISSION RESOLUTION // GM TOOLS</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
@@ -35,7 +34,6 @@
             font-family: 'Rajdhani', sans-serif;
             background: var(--primary-bg);
             color: var(--text-primary);
-            overflow-x: hidden;
             min-height: 100vh;
             background-image: 
                 radial-gradient(circle at 20% 50%, rgba(255, 51, 102, 0.03) 0%, transparent 50%),
@@ -70,318 +68,35 @@
             letter-spacing: 2px;
         }
         
-        .nav-links {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-        
-        .nav-link {
-            padding: 0.5rem 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .nav-link:hover {
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-            box-shadow: var(--glow-blue);
-        }
-        
-        .nav-link.active {
-            background: rgba(255, 51, 102, 0.1);
-            border-color: var(--accent-red);
-            color: var(--accent-red);
-            box-shadow: var(--glow-red);
-        }
-        
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .auth-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .auth-status.authenticated {
-            color: var(--accent-green);
-            border: 1px solid var(--accent-green);
-        }
-        
-        .auth-status.unauthenticated {
-            color: var(--accent-red);
-            border: 1px solid var(--accent-red);
-        }
-        
-        .auth-status:hover {
-            box-shadow: 0 0 15px rgba(255, 51, 102, 0.3);
-        }
-        
-        .tab-nav {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .tab-btn {
-            padding: 0.5rem 1rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-        
-        .tab-btn:hover, .tab-btn.active {
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-            box-shadow: var(--glow-blue);
-        }
-        
-        .main-container {
-            max-width: 1600px;
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
         
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .deployment-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-        }
-        
-        .panel {
+        .mission-selector {
             background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 1.5rem;
+            margin-bottom: 2rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            position: relative;
-        }
-        
-        .panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
-        }
-        
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
         }
         
         .panel-title {
             font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--accent-red);
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-        
-        .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 6px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-red), #cc1144);
-            color: white;
-            border: 1px solid var(--accent-red);
-        }
-        
-        .btn-primary:hover:not(:disabled) {
-            box-shadow: var(--glow-red);
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: rgba(255, 165, 0, 0.1);
-            color: var(--accent-amber);
-            border: 1px solid var(--accent-amber);
-        }
-        
-        .btn-success {
-            background: rgba(0, 255, 136, 0.1);
-            color: var(--accent-green);
-            border: 1px solid var(--accent-green);
-        }
-        
-        .btn-blue {
-            background: linear-gradient(135deg, var(--accent-blue), #0099cc);
-            color: white;
-            border: 1px solid var(--accent-blue);
-        }
-        
-        .btn-blue:hover:not(:disabled) {
-            box-shadow: var(--glow-blue);
-            transform: translateY(-2px);
-        }
-        
-        .quick-action-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .quick-action-card:hover {
-            border-color: var(--accent-red);
-            box-shadow: 0 4px 20px rgba(255, 51, 102, 0.2);
-        }
-        
-        .quick-action-card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .quick-action-title {
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .quick-action-desc {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-        
-        .active-mission {
-            background: rgba(255, 165, 0, 0.1);
-            border: 1px solid var(--accent-amber);
-            border-radius: 8px;
-            padding: 1rem;
             margin-bottom: 1rem;
         }
         
-        .mission-name {
-            font-weight: 700;
-            color: var(--accent-amber);
-            margin-bottom: 0.5rem;
-        }
-        
-        .mission-details {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .timer-display {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 0.5rem;
-            border-radius: 4px;
-            margin: 0.5rem 0;
-            font-family: 'Orbitron', monospace;
-            color: var(--accent-amber);
-            text-align: center;
-        }
-        
-        .asset-management-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .asset-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .asset-item:hover {
-            border-color: var(--accent-red);
-        }
-        
-        .asset-name {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        
-        .asset-status {
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        .status-available { background: rgba(0, 255, 136, 0.2); color: var(--accent-green); }
-        .status-deployed { background: rgba(255, 165, 0, 0.2); color: var(--accent-amber); }
-        .status-injured { background: rgba(255, 51, 102, 0.2); color: var(--accent-red); }
-        
-        .deployment-workspace {
+        .active-missions-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            min-height: 400px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
         }
         
         .mission-card {
@@ -389,7 +104,6 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1rem;
-            margin-bottom: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -405,106 +119,65 @@
             box-shadow: var(--glow-blue);
         }
         
-        .asset-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 1rem;
-            max-height: 400px;
-            overflow-y: auto;
-            padding: 0.5rem;
+        .resolution-panel {
+            display: none;
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
         
-        .asset-card {
+        .resolution-panel.active {
+            display: block;
+        }
+        
+        .resolution-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .success-selector {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .success-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
         }
         
-        .asset-card:hover {
-            border-color: var(--accent-green);
-            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.2);
+        .success-option:hover {
+            border-color: var(--accent-blue);
         }
         
-        .asset-card.selected {
+        .success-option.selected {
             border-color: var(--accent-green);
             background: rgba(0, 255, 136, 0.1);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
         }
         
-        .stats-mini {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.25rem;
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
+        .success-radio {
+            accent-color: var(--accent-green);
         }
         
-        .stat-mini {
-            text-align: center;
-            padding: 0.25rem;
+        .intelligence-form {
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 4px;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
-            border: 2px solid var(--accent-red);
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
-        }
-        
-        .modal-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--accent-red);
-        }
-        
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        
-        .close-btn:hover {
-            color: var(--accent-red);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
         }
         
         .form-group {
@@ -535,8 +208,8 @@
         
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            border-color: var(--accent-red);
-            box-shadow: 0 0 10px rgba(255, 51, 102, 0.2);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
         }
         
         .form-textarea {
@@ -544,713 +217,530 @@
             resize: vertical;
         }
         
-        .stats-input-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            z-index: 3000;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .notification.success {
-            background: var(--accent-green);
-        }
-        
-        .notification.error {
-            background: var(--accent-red);
-        }
-        
-        .notification.warning {
-            background: var(--accent-amber);
-        }
-        
-        .auth-warning {
-            background: rgba(255, 51, 102, 0.1);
-            border: 1px solid var(--accent-red);
-            border-radius: 8px;
+        .intel-item {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid var(--accent-amber);
+            border-radius: 6px;
             padding: 1rem;
             margin-bottom: 1rem;
+        }
+        
+        .intel-preview {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-red), #cc1144);
+            color: white;
+            border: 1px solid var(--accent-red);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: var(--glow-red);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-green), #00cc66);
+            color: white;
+            border: 1px solid var(--accent-green);
+        }
+        
+        .btn-blue {
+            background: linear-gradient(135deg, var(--accent-blue), #0099cc);
+            color: white;
+            border: 1px solid var(--accent-blue);
+        }
+        
+        .timer-display {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid var(--accent-amber);
+            border-radius: 6px;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            font-family: 'Orbitron', monospace;
+            color: var(--accent-amber);
             text-align: center;
         }
         
-        .password-check {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 9999;
+        .asset-list {
             display: flex;
-            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .asset-tag {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-green);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .follow-up-section {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
             align-items: center;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            min-height: 3rem;
         }
         
-        .password-check.hidden {
-            display: none;
+        .tag {
+            background: var(--accent-blue);
+            color: var(--primary-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
         
-        .password-form {
-            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
-            border: 2px solid var(--accent-red);
-            border-radius: 12px;
-            padding: 2rem;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
+        .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
         }
         
-        @media (max-width: 1200px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .deployment-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .deployment-workspace {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-links {
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
+        .tag-add-input {
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            outline: none;
+            flex-grow: 1;
+            min-width: 100px;
+            font-family: 'Rajdhani', sans-serif;
         }
     </style>
 </head>
 <body>
-    <!-- Password Check Overlay -->
-    <div class="password-check" id="passwordCheck">
-        <div class="password-form">
-            <div style="margin-bottom: 1.5rem;">
-                <h2 style="color: var(--accent-red); font-family: 'Orbitron', monospace; margin-bottom: 0.5rem;">
-                    <i class="fas fa-lock"></i> GM ACCESS REQUIRED
-                </h2>
-                <p style="color: var(--text-secondary);">Enter password to access Game Master controls</p>
-            </div>
-            <div style="margin-bottom: 1.5rem;">
-                <input type="password" id="passwordInput" placeholder="Enter GM Password" 
-                       style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-family: 'Rajdhani', sans-serif; font-size: 1rem; text-align: center;">
-            </div>
-            <div style="display: flex; gap: 1rem;">
-                <button onclick="checkPassword()" class="btn btn-primary" style="flex: 1;">
-                    <i class="fas fa-unlock"></i> Access
-                </button>
-                <button onclick="goToPlayer()" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Player
-                </button>
-            </div>
-        </div>
-    </div>
-
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <i class="fas fa-cog"></i> GM COMMAND CENTER
+                <i class="fas fa-gavel"></i> MISSION RESOLUTION
             </div>
-            <nav class="nav-links">
-                <a href="index.html" class="nav-link">Player Interface</a>
-                <span class="nav-link active">GM Access</span>
-            </nav>
-            <div class="header-controls">
-                <div class="auth-status" id="authStatus" onclick="handleAuthClick()">
-                    <i class="fas fa-lock"></i>
-                    <span>Checking Auth...</span>
-                </div>
-                <div class="tab-nav">
-                    <div class="tab-btn active" onclick="switchTab('dashboard')">Dashboard</div>
-                    <div class="tab-btn" onclick="switchTab('deployment')">Mission Deploy</div>
-                </div>
+            <div style="display: flex; gap: 1rem;">
+                <a href="gm.html" style="color: var(--accent-blue); text-decoration: none;">← Back to GM Panel</a>
             </div>
         </div>
     </header>
     
-    <div class="main-container">
-        <!-- Dashboard Tab -->
-        <div id="dashboard" class="tab-content active">
-            <div id="authWarning" class="auth-warning" style="display: none;">
-                <h3 style="color: var(--accent-red); margin-bottom: 0.5rem;">
-                    <i class="fas fa-exclamation-triangle"></i> Authentication Required
-                </h3>
-                <p style="margin-bottom: 1rem;">To create assets, missions, and modify game data, you need to authenticate with GitHub.</p>
-                <button class="btn btn-primary" onclick="showTokenModal()">
-                    <i class="fas fa-key"></i> Add GitHub Token
-                </button>
-            </div>
-            
-            <div class="dashboard-grid">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h2 class="panel-title"><i class="fas fa-bolt"></i> Quick Actions</h2>
-                        <button class="btn btn-secondary" onclick="refreshAllData()">
-                            <i class="fas fa-sync"></i> Refresh
-                        </button>
+    <div class="container">
+        <!-- Mission Selector -->
+        <div class="mission-selector">
+            <h2 class="panel-title"><i class="fas fa-crosshairs"></i> Active Missions</h2>
+            <div class="active-missions-grid" id="activeMissions">
+                <!-- Sample mission card -->
+                <div class="mission-card" onclick="selectMission(this, 'OP-2025-001')">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <div style="font-weight: 700; color: var(--accent-blue);">OPERATION NIGHTFALL</div>
+                        <div style="font-size: 0.8rem; padding: 0.2rem 0.5rem; background: rgba(255, 51, 102, 0.2); color: var(--accent-red); border-radius: 4px;">
+                            CLASSIFIED
+                        </div>
                     </div>
-                    
-                    <div class="quick-action-card" onclick="checkAuthAndRun(() => openModal('assetModal'))">
-                        <div class="quick-action-title">Create New Asset</div>
-                        <div class="quick-action-desc">Recruit a new intelligence operative</div>
+                    <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                        Infiltrate Vermillion Invictus Group
                     </div>
-                    
-                    <div class="quick-action-card" onclick="checkAuthAndRun(() => openModal('missionModal'))">
-                        <div class="quick-action-title">Create New Mission</div>
-                        <div class="quick-action-desc">Plan a new intelligence operation</div>
+                    <div class="timer-display">
+                        <i class="fas fa-hourglass-end"></i> MISSION COMPLETE - AWAITING RESOLUTION
                     </div>
-                    
-                    <div class="quick-action-card" onclick="checkAuthAndRun(processPayroll)">
-                        <div class="quick-action-title">Process Monthly Payroll</div>
-                        <div class="quick-action-desc">Deduct monthly costs from treasury</div>
-                    </div>
-                    
-                    <div class="quick-action-card" onclick="checkAuthAndRun(() => openModal('treasuryModal'))">
-                        <div class="quick-action-title">Adjust Treasury</div>
-                        <div class="quick-action-desc">Add/remove funds from network budget</div>
-                    </div>
-                    
-                    <div class="quick-action-card" onclick="generateRandomEvent()">
-                        <div class="quick-action-title">Generate Random Event</div>
-                        <div class="quick-action-desc">Create story complications or opportunities</div>
+                    <div class="asset-list">
+                        <span class="asset-tag">Marcus</span>
+                        <span class="asset-tag">Vera</span>
                     </div>
                 </div>
                 
-                <div class="panel">
-                    <div class="panel-header">
-                        <h2 class="panel-title"><i class="fas fa-clock"></i> Active Operations</h2>
-                    </div>
-                    
-                    <div class="active-missions-container">
-                        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                            <i class="fas fa-satellite-dish fa-spin fa-2x"></i>
-                            <p style="margin-top: 1rem;">Loading active operations...</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="panel">
-                    <div class="panel-header">
-                        <h2 class="panel-title"><i class="fas fa-users-cog"></i> Asset Roster</h2>
-                    </div>
-                    
-                    <div class="asset-management-list">
-                        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                            <i class="fas fa-satellite-dish fa-spin fa-2x"></i>
-                            <p style="margin-top: 1rem;">Loading asset roster...</p>
-                        </div>
-                    </div>
-                </div>
+                <!-- More mission cards would be loaded here -->
             </div>
         </div>
         
-        <!-- Mission Deployment Tab -->
-        <div id="deployment" class="tab-content">
-            <div class="deployment-grid">
-                <div class="panel">
-                    <div class="panel-header">
-                        <h2 class="panel-title"><i class="fas fa-chess"></i> Mission Deployment Center</h2>
-                        <button class="btn btn-blue" onclick="loadPlannedMissions()">
-                            <i class="fas fa-refresh"></i> Refresh
-                        </button>
-                    </div>
+        <!-- Mission Resolution Panel -->
+        <div class="resolution-panel" id="resolutionPanel">
+            <h2 class="panel-title"><i class="fas fa-clipboard-check"></i> Resolve Mission</h2>
+            
+            <div class="resolution-grid">
+                <!-- Left Column: Success Level & Intelligence -->
+                <div>
+                    <h3 style="color: var(--accent-blue); margin-bottom: 1rem;">
+                        <i class="fas fa-target"></i> Mission Outcome
+                    </h3>
                     
-                    <div class="deployment-workspace">
-                        <div>
-                            <h3 style="margin-bottom: 1rem; color: var(--accent-blue);">
-                                <i class="fas fa-crosshairs"></i> Select Mission
-                            </h3>
-                            <div id="missionsContainer">
-                                <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                                    <i class="fas fa-satellite-dish fa-spin fa-2x"></i>
-                                    <p style="margin-top: 1rem;">Loading planned missions...</p>
-                                </div>
+                    <div class="success-selector">
+                        <div class="success-option" onclick="selectSuccess(this, 'failure')">
+                            <input type="radio" name="success" value="failure" class="success-radio">
+                            <div>
+                                <div style="font-weight: 600; color: var(--accent-red);">Total Failure (0-25)</div>
+                                <div style="font-size: 0.9rem; color: var(--text-muted);">Mission failed completely</div>
                             </div>
                         </div>
                         
-                        <div>
-                            <h3 style="margin-bottom: 1rem; color: var(--accent-green);">
-                                <i class="fas fa-users"></i> Available Assets
-                            </h3>
-                            <div class="asset-grid" id="assetsContainer">
-                                <div style="text-align: center; color: var(--text-muted); padding: 2rem; grid-column: 1 / -1;">
-                                    <i class="fas fa-satellite-dish fa-spin fa-2x"></i>
-                                    <p style="margin-top: 1rem;">Loading available assets...</p>
-                                </div>
+                        <div class="success-option" onclick="selectSuccess(this, 'partial_1')">
+                            <input type="radio" name="success" value="partial_1" class="success-radio">
+                            <div>
+                                <div style="font-weight: 600; color: var(--accent-amber);">Partial Success 1 (26-40)</div>
+                                <div style="font-size: 0.9rem; color: var(--text-muted);">Minimal intelligence gathered</div>
+                            </div>
+                        </div>
+                        
+                        <div class="success-option" onclick="selectSuccess(this, 'partial_2')">
+                            <input type="radio" name="success" value="partial_2" class="success-radio">
+                            <div>
+                                <div style="font-weight: 600; color: var(--accent-amber);">Partial Success 2 (41-55)</div>
+                                <div style="font-size: 0.9rem; color: var(--text-muted);">Some useful intelligence</div>
+                            </div>
+                        </div>
+                        
+                        <div class="success-option" onclick="selectSuccess(this, 'partial_3')">
+                            <input type="radio" name="success" value="partial_3" class="success-radio">
+                            <div>
+                                <div style="font-weight: 600; color: var(--accent-amber);">Partial Success 3 (56-70)</div>
+                                <div style="font-size: 0.9rem; color: var(--text-muted);">Good intelligence gathered</div>
+                            </div>
+                        </div>
+                        
+                        <div class="success-option" onclick="selectSuccess(this, 'partial_4')">
+                            <input type="radio" name="success" value="partial_4" class="success-radio">
+                            <div>
+                                <div style="font-weight: 600; color: var(--accent-amber);">Partial Success 4 (71-85)</div>
+                                <div style="font-size: 0.9rem; color: var(--text-muted);">Excellent intelligence</div>
+                            </div>
+                        </div>
+                        
+                        <div class="success-option" onclick="selectSuccess(this, 'complete')">
+                            <input type="radio" name="success" value="complete" class="success-radio">
+                            <div>
+                                <div style="font-weight: 600; color: var(--accent-green);">Complete Success (86-100)</div>
+                                <div style="font-size: 0.9rem; color: var(--text-muted);">All objectives achieved</div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="panel">
-                    <div class="panel-header">
-                        <h3 class="panel-title"><i class="fas fa-calculator"></i> Deployment Analysis</h3>
-                    </div>
                     
-                    <div id="selectedMissionInfo">
-                        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                            <i class="fas fa-crosshairs"></i>
-                            <p style="margin-top: 0.5rem;">Select a mission to analyze</p>
-                        </div>
-                    </div>
-                    
-                    <div id="selectedAssetsInfo">
-                        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                            <i class="fas fa-users"></i>
-                            <p style="margin-top: 0.5rem;">Select assets for deployment</p>
-                        </div>
-                    </div>
-                    
-                    <div id="deploymentControls" style="display: none;">
-                        <div class="form-group">
-                            <label class="form-label">Deployment Start</label>
-                            <input type="datetime-local" id="deploymentStart" class="form-input">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Duration (Hours)</label>
-                            <input type="number" id="missionDuration" class="form-input" value="72" min="1" max="720">
+                    <!-- Intelligence Gathered -->
+                    <div class="intelligence-form">
+                        <h4 style="color: var(--accent-amber); margin-bottom: 1rem;">
+                            <i class="fas fa-brain"></i> Intelligence Gathered
+                        </h4>
+                        
+                        <div id="intelligenceItems">
+                            <!-- Intelligence items will be added here -->
                         </div>
                         
-                        <button class="btn btn-success" style="width: 100%; margin-top: 1rem;" onclick="deployMission()">
-                            <i class="fas fa-rocket"></i> Deploy Mission
+                        <button type="button" class="btn btn-blue" onclick="addIntelligenceItem()">
+                            <i class="fas fa-plus"></i> Add Intelligence
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- All the same modals from before -->
-    <!-- Asset Creation Modal -->
-    <div class="modal" id="assetModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Create New Asset</h3>
-                <button class="close-btn" onclick="closeModal('assetModal')">&times;</button>
-            </div>
-            
-            <form id="assetForm" onsubmit="createNewAsset(event)">
-                <div class="form-group">
-                    <label class="form-label">Asset Name</label>
-                    <input type="text" name="real_name" class="form-input" placeholder="Marcus Blackthorne" required>
-                </div>
                 
-                <div class="form-group">
-                    <label class="form-label">Codename</label>
-                    <input type="text" name="codename" class="form-input" placeholder="Blackthorne">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Location</label>
-                    <select name="realm" class="form-select" required>
-                        <option value="Mortal Coil">Mortal Coil</option>
-                        <option value="Winter Court">Winter Court - Never Never</option>
-                        <option value="Summer Court">Summer Court - Never Never</option>
-                        <option value="Hell">Hell</option>
-                        <option value="Abyss">Abyss</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Region</label>
-                    <input type="text" name="region" class="form-input" placeholder="Chicago, Illinois">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Stats (1-10)</label>
-                    <div class="stats-input-grid">
-                        <div>
-                            <label class="form-label" style="margin-bottom: 0.25rem;">Skill</label>
-                            <input type="number" name="skill" class="form-input" min="1" max="10" value="5" required>
+                <!-- Right Column: Details & Notes -->
+                <div>
+                    <h3 style="color: var(--accent-green); margin-bottom: 1rem;">
+                        <i class="fas fa-scroll"></i> Resolution Details
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Actual Difficulty (1-10)</label>
+                        <input type="number" class="form-input" min="1" max="10" value="5" id="actualDifficulty">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Story Notes</label>
+                        <textarea class="form-textarea" id="storyNotes" placeholder="Describe what happened during the mission..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Complications</label>
+                        <textarea class="form-textarea" id="complications" placeholder="Any complications that arose..."></textarea>
+                    </div>
+                    
+                    <div class="follow-up-section">
+                        <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">
+                            <i class="fas fa-arrow-right"></i> Follow-up Actions
+                        </h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Asset Status Changes</label>
+                            <select class="form-select" id="assetChanges">
+                                <option value="">No changes</option>
+                                <option value="injured">Asset(s) injured</option>
+                                <option value="captured">Asset(s) captured</option>
+                                <option value="promoted">Asset(s) gained experience</option>
+                                <option value="compromised">Asset(s) identity compromised</option>
+                            </select>
                         </div>
-                        <div>
-                            <label class="form-label" style="margin-bottom: 0.25rem;">Stealth</label>
-                            <input type="number" name="stealth" class="form-input" min="1" max="10" value="5" required>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Faction Relations</label>
+                            <input type="text" class="form-input" id="factionChanges" placeholder="Chicago PD: +1, Winter Court: -2">
                         </div>
-                        <div>
-                            <label class="form-label" style="margin-bottom: 0.25rem;">Combat</label>
-                            <input type="number" name="combat" class="form-input" min="1" max="10" value="5" required>
-                        </div>
-                        <div>
-                            <label class="form-label" style="margin-bottom: 0.25rem;">Tech</label>
-                            <input type="number" name="tech" class="form-input" min="1" max="10" value="5" required>
-                        </div>
-                        <div>
-                            <label class="form-label" style="margin-bottom: 0.25rem;">Social</label>
-                            <input type="number" name="social" class="form-input" min="1" max="10" value="5" required>
-                        </div>
-                        <div>
-                            <label class="form-label" style="margin-bottom: 0.25rem;">Will</label>
-                            <input type="number" name="will" class="form-input" min="1" max="10" value="5" required>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Follow-up Missions</label>
+                            <textarea class="form-textarea" id="followUpMissions" placeholder="Ideas for missions this intelligence might unlock..."></textarea>
                         </div>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Monthly Salary ($)</label>
-                    <input type="number" name="monthly_salary" class="form-input" placeholder="2500" value="2500">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea name="description" class="form-textarea" placeholder="Background, abilities, and quirks..."></textarea>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i class="fas fa-plus"></i> Create Asset
-                </button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Mission Creation Modal -->
-    <div class="modal" id="missionModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Create New Mission</h3>
-                <button class="close-btn" onclick="closeModal('missionModal')">&times;</button>
             </div>
             
-            <form id="missionForm" onsubmit="createNewMission(event)">
-                <div class="form-group">
-                    <label class="form-label">Mission Codename</label>
-                    <input type="text" name="codename" class="form-input" placeholder="OPERATION NIGHTFALL" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Classification</label>
-                    <select name="classification" class="form-select" required>
-                        <option value="CLASSIFIED">CLASSIFIED</option>
-                        <option value="SECRET">SECRET</option>
-                        <option value="TOP SECRET">TOP SECRET</option>
-                        <option value="EYES ONLY">EYES ONLY</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Primary Objective</label>
-                    <textarea name="primary_objective" class="form-textarea" placeholder="Infiltrate target location and gather intelligence..." required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Target Realm</label>
-                    <select name="target_realm" class="form-select" required>
-                        <option value="Mortal Coil">Mortal Coil</option>
-                        <option value="Winter Court">Winter Court</option>
-                        <option value="Summer Court">Summer Court</option>
-                        <option value="Hell">Hell</option>
-                        <option value="Abyss">Abyss</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Risk Level</label>
-                    <select name="risk_level" class="form-select" required>
-                        <option value="LOW">LOW</option>
-                        <option value="MEDIUM" selected>MEDIUM</option>
-                        <option value="HIGH">HIGH</option>
-                        <option value="EXTREME">EXTREME</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Estimated Duration (Hours)</label>
-                    <input type="number" name="duration_hours" class="form-input" placeholder="72" value="72" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Mission Status</label>
-                    <select name="mission_status" class="form-select" required>
-                        <option value="PLANNING">PLANNING (Hidden from players)</option>
-                        <option value="ACTIVE">ACTIVE (Visible to players)</option>
-                    </select>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i class="fas fa-plus"></i> Create Mission
-                </button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Treasury Modal -->
-    <div class="modal" id="treasuryModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Adjust Treasury</h3>
-                <button class="close-btn" onclick="closeModal('treasuryModal')">&times;</button>
+            <!-- Resolution Preview -->
+            <div class="intel-preview" id="resolutionPreview" style="display: none;">
+                <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">
+                    <i class="fas fa-eye"></i> Resolution Summary
+                </h4>
+                <div id="previewContent"></div>
             </div>
             
-            <form id="treasuryForm" onsubmit="adjustTreasury(event)">
-                <div class="form-group">
-                    <label class="form-label">Amount ($)</label>
-                    <input type="number" name="amount" class="form-input" placeholder="50000" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Transaction Type</label>
-                    <select name="transaction_type" class="form-select" required>
-                        <option value="add">Add Funds</option>
-                        <option value="subtract">Subtract Funds</option>
-                        <option value="set">Set Treasury To</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Reason</label>
-                    <input type="text" name="reason" class="form-input" placeholder="Funding from benefactor..." required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i class="fas fa-dollar-sign"></i> Update Treasury
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button class="btn btn-blue" onclick="previewResolution()">
+                    <i class="fas fa-eye"></i> Preview Resolution
                 </button>
-            </form>
+                <button class="btn btn-success" onclick="resolveMission()">
+                    <i class="fas fa-check"></i> Resolve Mission
+                </button>
+                <button class="btn btn-primary" onclick="resetForm()">
+                    <i class="fas fa-undo"></i> Reset Form
+                </button>
+            </div>
         </div>
     </div>
-    
-    <!-- Load dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
-    <script src="js/data-loader.js"></script>
     
     <script>
-        // Password check on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            checkGMAccess();
-        });
+        let selectedMissionId = null;
+        let intelligenceCounter = 0;
         
-        function checkGMAccess() {
-            const hasAccess = sessionStorage.getItem('gmAccess') === 'true';
-            if (!hasAccess) {
-                document.getElementById('passwordCheck').classList.remove('hidden');
-                document.getElementById('passwordInput').focus();
-            } else {
-                document.getElementById('passwordCheck').classList.add('hidden');
-                initializeGMInterface();
-            }
-        }
-        
-        function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === 'Lastdrop1@') {
-                sessionStorage.setItem('gmAccess', 'true');
-                document.getElementById('passwordCheck').classList.add('hidden');
-                initializeGMInterface();
-            } else {
-                alert('Incorrect password. Access denied.');
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('passwordInput').focus();
-            }
-        }
-        
-        function goToPlayer() {
-            window.location.href = 'index.html';
-        }
-        
-        // All the same GM functionality from before
-        let selectedMission = null;
-        let selectedAssets = new Set();
-        let availableAssets = [];
-        let plannedMissions = [];
-        
-        async function initializeGMInterface() {
-            try {
-                updateAuthStatus();
-                await loadGMData();
-                
-                const now = new Date();
-                const deploymentStart = document.getElementById('deploymentStart');
-                if (deploymentStart) {
-                    deploymentStart.value = now.toISOString().slice(0, 16);
-                }
-                
-            } catch (error) {
-                console.error('Failed to initialize GM interface:', error);
-                showNotification('Failed to load data', 'error');
-            }
-        }
-        
-        function updateAuthStatus() {
-            const authStatus = document.getElementById('authStatus');
-            const authWarning = document.getElementById('authWarning');
-            
-            if (intelligenceAPI && intelligenceAPI.canWrite()) {
-                authStatus.className = 'auth-status authenticated';
-                authStatus.innerHTML = '<i class="fas fa-unlock"></i><span>Authenticated</span>';
-                authWarning.style.display = 'none';
-            } else {
-                authStatus.className = 'auth-status unauthenticated';
-                authStatus.innerHTML = '<i class="fas fa-lock"></i><span>Read-Only Mode</span>';
-                authWarning.style.display = 'block';
-            }
-        }
-        
-        function handleAuthClick() {
-            if (!intelligenceAPI || !intelligenceAPI.canWrite()) {
-                showTokenModal();
-            }
-        }
-        
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
+        function selectMission(element, missionId) {
+            // Remove selection from other cards
+            document.querySelectorAll('.mission-card').forEach(card => {
+                card.classList.remove('selected');
             });
-            event.target.classList.add('active');
             
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(tabName).classList.add('active');
+            // Select this card
+            element.classList.add('selected');
+            selectedMissionId = missionId;
             
-            if (tabName === 'deployment') {
-                loadPlannedMissions();
-                loadAvailableAssets();
-            }
+            // Show resolution panel
+            document.getElementById('resolutionPanel').classList.add('active');
+            
+            // Scroll to resolution panel
+            document.getElementById('resolutionPanel').scrollIntoView({ behavior: 'smooth' });
         }
         
-        // Include all the same GM functions from the previous version
-        // (I'll include the key ones here for brevity)
+        function selectSuccess(element, level) {
+            // Remove selection from other options
+            document.querySelectorAll('.success-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Select this option
+            element.classList.add('selected');
+            element.querySelector('input[type="radio"]').checked = true;
+            
+            // Update intelligence preview
+            updateIntelligencePreview(level);
+        }
         
-        async function createNewAsset(event) {
-            event.preventDefault();
+        function updateIntelligencePreview(level) {
+            // This would load the predefined intelligence for this success level
+            // For now, just update the UI to show what would be unlocked
+            console.log('Success level selected:', level);
+        }
+        
+        function addIntelligenceItem() {
+            intelligenceCounter++;
+            const container = document.getElementById('intelligenceItems');
             
-            if (!intelligenceAPI || !intelligenceAPI.canWrite()) {
-                showNotification('GitHub authentication required', 'error');
-                return;
-            }
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'intel-item';
+            itemDiv.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Intelligence Title</label>
+                    <input type="text" class="form-input" placeholder="What was discovered?" name="intel_title_${intelligenceCounter}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" placeholder="Detailed description of the intelligence..." name="intel_desc_${intelligenceCounter}"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tags (comma separated)</label>
+                    <input type="text" class="form-input" placeholder="surveillance, financial, contacts" name="intel_tags_${intelligenceCounter}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reliability</label>
+                    <select class="form-select" name="intel_reliability_${intelligenceCounter}">
+                        <option value="HIGH">High</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="LOW">Low</option>
+                        <option value="UNVERIFIED">Unverified</option>
+                    </select>
+                </div>
+                <button type="button" onclick="removeIntelligenceItem(this)" style="background: var(--accent-red); color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            `;
             
-            try {
-                const formData = new FormData(event.target);
-                const assetData = {
-                    real_name: formData.get('real_name'),
-                    codename: formData.get('codename') || formData.get('real_name'),
-                    description: formData.get('description'),
-                    location: {
-                        realm: formData.get('realm'),
-                        region: formData.get('region')
-                    },
-                    stats: {
-                        skill: parseInt(formData.get('skill')),
-                        stealth: parseInt(formData.get('stealth')),
-                        combat: parseInt(formData.get('combat')),
-                        tech: parseInt(formData.get('tech')),
-                        social: parseInt(formData.get('social')),
-                        will: parseInt(formData.get('will'))
-                    },
-                    costs: {
-                        monthly_salary: parseInt(formData.get('monthly_salary'))
+            container.appendChild(itemDiv);
+        }
+        
+        function removeIntelligenceItem(button) {
+            button.closest('.intel-item').remove();
+        }
+        
+        function previewResolution() {
+            const preview = document.getElementById('resolutionPreview');
+            const content = document.getElementById('previewContent');
+            
+            // Gather form data
+            const successLevel = document.querySelector('input[name="success"]:checked')?.value;
+            const difficulty = document.getElementById('actualDifficulty').value;
+            const storyNotes = document.getElementById('storyNotes').value;
+            const complications = document.getElementById('complications').value;
+            
+            // Generate preview
+            let previewHTML = `
+                <div><strong>Success Level:</strong> ${successLevel || 'Not selected'}</div>
+                <div><strong>Actual Difficulty:</strong> ${difficulty}/10</div>
+                ${storyNotes ? `<div><strong>Story:</strong> ${storyNotes}</div>` : ''}
+                ${complications ? `<div><strong>Complications:</strong> ${complications}</div>` : ''}
+            `;
+            
+            // Add intelligence items
+            const intelItems = document.querySelectorAll('.intel-item');
+            if (intelItems.length > 0) {
+                previewHTML += '<div><strong>Intelligence Gathered:</strong><ul>';
+                intelItems.forEach(item => {
+                    const title = item.querySelector('[name^="intel_title"]').value;
+                    if (title) {
+                        previewHTML += `<li>${title}</li>`;
                     }
-                };
-                
-                showNotification('Creating asset...', 'warning');
-                const asset = await intelligenceAPI.createAsset(assetData);
-                
-                showNotification(`Asset "${asset.real_name}" created successfully!`, 'success');
-                closeModal('assetModal');
-                
-                document.getElementById('assetForm').reset();
-                await loadGMData();
-                
-            } catch (error) {
-                console.error('Failed to create asset:', error);
-                showNotification(`Failed to create asset: ${error.message}`, 'error');
+                });
+                previewHTML += '</ul></div>';
             }
+            
+            content.innerHTML = previewHTML;
+            preview.style.display = 'block';
         }
         
-        // ... (include all other GM functions from the previous version)
-        
-        function checkAuthAndRun(func) {
-            if (!intelligenceAPI || !intelligenceAPI.canWrite()) {
-                showNotification('GitHub authentication required for this action', 'warning');
-                showTokenModal();
+        function resolveMission() {
+            if (!selectedMissionId) {
+                alert('Please select a mission first');
                 return;
             }
-            func();
-        }
-        
-        function openModal(modalId) {
-            if (!intelligenceAPI || !intelligenceAPI.canWrite()) {
-                if (modalId === 'assetModal' || modalId === 'missionModal') {
-                    showNotification('GitHub authentication required', 'warning');
-                    showTokenModal();
-                    return;
+            
+            const successLevel = document.querySelector('input[name="success"]:checked')?.value;
+            if (!successLevel) {
+                alert('Please select a success level');
+                return;
+            }
+            
+            // Gather all form data
+            const resolutionData = {
+                missionId: selectedMissionId,
+                successLevel: successLevel,
+                actualDifficulty: document.getElementById('actualDifficulty').value,
+                storyNotes: document.getElementById('storyNotes').value,
+                complications: document.getElementById('complications').value,
+                assetChanges: document.getElementById('assetChanges').value,
+                factionChanges: document.getElementById('factionChanges').value,
+                followUpMissions: document.getElementById('followUpMissions').value,
+                intelligence: []
+            };
+            
+            // Gather intelligence items
+            document.querySelectorAll('.intel-item').forEach((item, index) => {
+                const title = item.querySelector('[name^="intel_title"]').value;
+                const description = item.querySelector('[name^="intel_desc"]').value;
+                const tags = item.querySelector('[name^="intel_tags"]').value;
+                const reliability = item.querySelector('[name^="intel_reliability"]').value;
+                
+                if (title) {
+                    resolutionData.intelligence.push({
+                        title,
+                        description,
+                        tags: tags.split(',').map(tag => tag.trim()),
+                        reliability,
+                        gathered_date: new Date().toISOString().split('T')[0]
+                    });
                 }
-            }
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('active');
-            }
-        }
-        
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('active');
-            }
-        }
-        
-        function showTokenModal() {
-            const token = prompt('Enter your GitHub Personal Access Token:\n\n(Create one at GitHub Settings > Developer settings > Personal access tokens)\nNeeds "repo" scope for write access.');
-            if (token) {
-                intelligenceAPI.setGitHubToken(token);
-                updateAuthStatus();
-                showNotification('GitHub token saved successfully!', 'success');
-            }
-        }
-        
-        function showNotification(message, type = 'success') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'exclamation-triangle'}"></i> ${message}`;
+            });
             
-            document.body.appendChild(notification);
+            // This would send the data to your GitHub API
+            console.log('Resolution data:', resolutionData);
             
-            setTimeout(() => notification.classList.add('show'), 100);
+            // For demo purposes, just show success
+            alert(`Mission ${selectedMissionId} resolved with ${successLevel} success level!`);
             
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => notification.remove(), 300);
-            }, 4000);
-        }
-        
-        async function loadGMData() {
-            // Simplified loading for now - implement full functionality as needed
-            console.log('Loading GM data...');
-        }
-        
-        async function refreshAllData() {
-            showNotification('Data refreshed!', 'success');
-        }
-        
-        function generateRandomEvent() {
-            const events = [
-                'A rival intelligence network has been detected in your territory',
-                'One of your assets has discovered a major supernatural threat',
-                'Political tensions in the Never Never have escalated'
-            ];
+            // In real implementation, this would:
+            // 1. Update the mission YAML file with results
+            // 2. Create intelligence files if needed
+            // 3. Update asset statuses
+            // 4. Update faction standings
+            // 5. Refresh the mission list
             
-            const randomEvent = events[Math.floor(Math.random() * events.length)];
-            alert(`Random Event Generated:\n\n${randomEvent}`);
+            resetForm();
         }
         
-        // Enter key for password
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !document.getElementById('passwordCheck').classList.contains('hidden')) {
-                checkPassword();
-            }
+        function resetForm() {
+            // Clear all form inputs
+            document.querySelectorAll('input, textarea, select').forEach(input => {
+                if (input.type === 'radio') {
+                    input.checked = false;
+                } else {
+                    input.value = '';
+                }
+            });
+            
+            // Clear intelligence items
+            document.getElementById('intelligenceItems').innerHTML = '';
+            
+            // Hide preview
+            document.getElementById('resolutionPreview').style.display = 'none';
+            
+            // Clear success selection
+            document.querySelectorAll('.success-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Reset difficulty to default
+            document.getElementById('actualDifficulty').value = '5';
+            
+            intelligenceCounter = 0;
+        }
+        
+        // Load active missions on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // This would load actual active missions from your data
+            console.log('Loading active missions...');
         });
     </script>
 </body>
