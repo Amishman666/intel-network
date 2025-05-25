@@ -507,6 +507,94 @@
             text-align: center;
         }
         
+        /* Asset Editor Specific Styles */
+        .asset-editor-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+        
+        .asset-editor-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .asset-editor-content {
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+            border: 2px solid var(--accent-blue);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .form-section {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        
+        .stat-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-value {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), #0099cc);
+            border: 2px solid var(--accent-blue);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-slider {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        
+        .selected-asset-tag {
+            display: inline-block;
+            background: var(--accent-green);
+            color: var(--primary-bg);
+            padding: 0.25rem 0.5rem;
+            margin: 0.25rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
         @media (max-width: 1200px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -515,6 +603,10 @@
             .nav-links {
                 flex-wrap: wrap;
                 gap: 0.5rem;
+            }
+            
+            .editor-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -591,7 +683,7 @@
                         </button>
                     </div>
                     
-                    <div class="quick-action-card" onclick="checkAuthAndRun(() => openModal('assetModal'))">
+                    <div class="quick-action-card" onclick="checkAuthAndRun(() => editAsset('new'))">
                         <div class="quick-action-title">Create New Asset</div>
                         <div class="quick-action-desc">Recruit a new intelligence operative</div>
                     </div>
@@ -650,7 +742,7 @@
             <div class="panel">
                 <div class="panel-header">
                     <h2 class="panel-title"><i class="fas fa-users"></i> Asset Management</h2>
-                    <button class="btn btn-primary" onclick="checkAuthAndRun(() => openModal('assetModal'))">
+                    <button class="btn btn-primary" onclick="checkAuthAndRun(() => editAsset('new'))">
                         <i class="fas fa-plus"></i> Create Asset
                     </button>
                 </div>
@@ -888,12 +980,226 @@
             </form>
         </div>
     </div>
+
+    <!-- Asset Editor Modal -->
+    <div class="asset-editor-modal" id="assetEditorModal">
+        <div class="asset-editor-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-user-plus"></i> Asset Editor
+                </h3>
+                <button class="close-btn" onclick="closeAssetEditor()">&times;</button>
+            </div>
+            
+            <!-- Asset Preview -->
+            <div class="panel" style="margin-bottom: 1.5rem;">
+                <h4 style="color: var(--accent-green); margin-bottom: 1rem;">Live Preview</h4>
+                <div id="assetPreviewCard">
+                    <!-- Preview will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <form id="assetEditorForm">
+                <div class="editor-grid">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Basic Information</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Real Name</label>
+                                <input type="text" id="assetRealName" class="form-input" placeholder="Marcus Chen" onchange="updateAssetPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Codename</label>
+                                <input type="text" id="assetCodename" class="form-input" placeholder="Nightfall" onchange="updateAssetPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Classification</label>
+                                <select id="assetClassification" class="form-select" onchange="updateAssetPreview()">
+                                    <option value="CONFIDENTIAL">CONFIDENTIAL</option>
+                                    <option value="SECRET">SECRET</option>
+                                    <option value="TOP SECRET">TOP SECRET</option>
+                                    <option value="EYES ONLY">EYES ONLY</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Image URL (Optional)</label>
+                                <input type="url" id="assetImageUrl" class="form-input" placeholder="https://i.imgur.com/..." onchange="updateAssetPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea id="assetDescription" class="form-textarea" rows="3" placeholder="Background, personality, and notable characteristics..." onchange="updateAssetPreview()"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Location & Mobility -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Location</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Realm</label>
+                                <select id="assetRealm" class="form-select" onchange="updateAssetPreview()">
+                                    <option value="Mortal Coil">Mortal Coil</option>
+                                    <option value="Winter Court">Winter Court - Never Never</option>
+                                    <option value="Summer Court">Summer Court - Never Never</option>
+                                    <option value="Hell">Hell</option>
+                                    <option value="Abyss">Abyss</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Region/City</label>
+                                <input type="text" id="assetRegion" class="form-input" placeholder="Chicago, Illinois" onchange="updateAssetPreview()">
+                            </div>
+                        </div>
+                        
+                        <!-- Financial -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Financial</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Monthly Salary ($)</label>
+                                <input type="number" id="assetMonthlySalary" class="form-input" value="2500" min="0" onchange="updateAssetPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Recruitment Fee ($)</label>
+                                <input type="number" id="assetRecruitmentFee" class="form-input" value="5000" min="0">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div>
+                        <!-- Core Stats -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Core Stats (1-10)</h4>
+                            
+                            <div class="stats-grid">
+                                <div class="stat-input">
+                                    <div class="stat-value" id="assetSkillValue">5</div>
+                                    <input type="range" class="stat-slider" id="assetSkill" min="1" max="10" value="5" oninput="updateAssetStatDisplay('skill')" onchange="updateAssetPreview()">
+                                    <label class="form-label" style="text-align: center;">Skill</label>
+                                </div>
+                                
+                                <div class="stat-input">
+                                    <div class="stat-value" id="assetStealthValue">5</div>
+                                    <input type="range" class="stat-slider" id="assetStealth" min="1" max="10" value="5" oninput="updateAssetStatDisplay('stealth')" onchange="updateAssetPreview()">
+                                    <label class="form-label" style="text-align: center;">Stealth</label>
+                                </div>
+                                
+                                <div class="stat-input">
+                                    <div class="stat-value" id="assetCombatValue">5</div>
+                                    <input type="range" class="stat-slider" id="assetCombat" min="1" max="10" value="5" oninput="updateAssetStatDisplay('combat')" onchange="updateAssetPreview()">
+                                    <label class="form-label" style="text-align: center;">Combat</label>
+                                </div>
+                                
+                                <div class="stat-input">
+                                    <div class="stat-value" id="assetTechValue">5</div>
+                                    <input type="range" class="stat-slider" id="assetTech" min="1" max="10" value="5" oninput="updateAssetStatDisplay('tech')" onchange="updateAssetPreview()">
+                                    <label class="form-label" style="text-align: center;">Tech</label>
+                                </div>
+                                
+                                <div class="stat-input">
+                                    <div class="stat-value" id="assetSocialValue">5</div>
+                                    <input type="range" class="stat-slider" id="assetSocial" min="1" max="10" value="5" oninput="updateAssetStatDisplay('social')" onchange="updateAssetPreview()">
+                                    <label class="form-label" style="text-align: center;">Social</label>
+                                </div>
+                                
+                                <div class="stat-input">
+                                    <div class="stat-value" id="assetWillValue">5</div>
+                                    <input type="range" class="stat-slider" id="assetWill" min="1" max="10" value="5" oninput="updateAssetStatDisplay('will')" onchange="updateAssetPreview()">
+                                    <label class="form-label" style="text-align: center;">Will</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Psychological Profile -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Psychological Profile</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Loyalty (1-10): <span id="assetLoyaltyDisplay">8</span></label>
+                                <input type="range" id="assetLoyalty" min="1" max="10" value="8" oninput="document.getElementById('assetLoyaltyDisplay').textContent = this.value">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Corruption Resistance (1-10): <span id="assetCorruptionResistDisplay">7</span></label>
+                                <input type="range" id="assetCorruptionResist" min="1" max="10" value="7" oninput="document.getElementById('assetCorruptionResistDisplay').textContent = this.value">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Stress Tolerance (1-10): <span id="assetStressToleranceDisplay">6</span></label>
+                                <input type="range" id="assetStressTolerance" min="1" max="10" value="6" oninput="document.getElementById('assetStressToleranceDisplay').textContent = this.value">
+                            </div>
+                        </div>
+                        
+                        <!-- Specializations -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Specializations</h4>
+                            
+                            <div class="form-group">
+                                <input type="text" id="assetNewSpecialization" class="form-input" placeholder="Add specialization (e.g., 'Hacker', 'Linguist')" onkeypress="if(event.key==='Enter'){event.preventDefault();addAssetSpecialization();}">
+                                <button type="button" class="btn btn-secondary" onclick="addAssetSpecialization()" style="margin-top: 0.5rem; width: 100%;">
+                                    <i class="fas fa-plus"></i> Add Specialization
+                                </button>
+                            </div>
+                            
+                            <div id="assetSpecializationsList">
+                                <!-- Specializations will be added here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Equipment -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Equipment</h4>
+                            
+                            <div class="form-group">
+                                <input type="text" id="assetNewEquipment" class="form-input" placeholder="Add equipment (e.g., 'Encrypted Laptop', 'Lockpicks')" onkeypress="if(event.key==='Enter'){event.preventDefault();addAssetEquipment();}">
+                                <button type="button" class="btn btn-secondary" onclick="addAssetEquipment()" style="margin-top: 0.5rem; width: 100%;">
+                                    <i class="fas fa-plus"></i> Add Equipment
+                                </button>
+                            </div>
+                            
+                            <div id="assetEquipmentList">
+                                <!-- Equipment will be added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: center;">
+                <button class="btn btn-success" onclick="saveAssetFromEditor()">
+                    <i class="fas fa-save"></i> Save Asset
+                </button>
+                <button class="btn btn-secondary" onclick="closeAssetEditor()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn btn-danger" onclick="deleteCurrentAsset()" style="display: none;" id="deleteAssetBtn">
+                    <i class="fas fa-trash"></i> Delete Asset
+                </button>
+            </div>
+        </div>
+    </div>
     
     <!-- Load dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <script src="js/data-loader.js"></script>
     
     <script>
+        // Asset Editor Variables
+        let currentEditingAsset = null;
+        let assetSpecializations = [];
+        let assetEquipment = [];
+        
         // Password check on page load
         document.addEventListener('DOMContentLoaded', function() {
             checkGMAccess();
@@ -1058,27 +1364,47 @@
                 const assets = await intelligenceAPI.loadAssets();
                 const container = document.getElementById('assetManagementList');
                 
+                // Add "Create New Asset" button at the top
+                container.innerHTML = `
+                    <div class="list-item" onclick="editAsset('new')" style="border: 2px dashed var(--accent-green); background: rgba(0, 255, 136, 0.1); cursor: pointer;">
+                        <div>
+                            <div class="item-name" style="color: var(--accent-green);">
+                                <i class="fas fa-plus"></i> Create New Asset
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Add a new operative to your network
+                            </div>
+                        </div>
+                        <div class="item-status" style="background: var(--accent-green); color: var(--primary-bg);">NEW</div>
+                    </div>
+                `;
+                
                 if (assets.length === 0) {
-                    container.innerHTML = `
+                    container.innerHTML += `
                         <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                            <i class="fas fa-users"></i>
-                            <p style="margin-top: 0.5rem;">No assets created yet</p>
+                            <i class="fas fa-users fa-2x"></i>
+                            <p style="margin-top: 1rem;">No assets created yet</p>
                         </div>
                     `;
                     return;
                 }
                 
-                container.innerHTML = assets.map(asset => `
-                    <div class="list-item" onclick="editAsset('${asset.asset_id}')">
-                        <div>
-                            <div class="item-name">${asset.real_name || asset.codename}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">
-                                ${asset.location?.realm || 'Unknown'} - $${asset.costs?.monthly_salary || 0}/month
+                // Add existing assets
+                assets.forEach(asset => {
+                    const assetElement = document.createElement('div');
+                    assetElement.innerHTML = `
+                        <div class="list-item" onclick="editAsset('${asset.asset_id}')">
+                            <div>
+                                <div class="item-name">${asset.real_name || asset.codename}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                    ${asset.location?.realm || 'Unknown'} - $${asset.costs?.monthly_salary || 0}/month
+                                </div>
                             </div>
+                            <div class="item-status status-${asset.status?.current || 'available'}">${(asset.status?.current || 'available').toUpperCase()}</div>
                         </div>
-                        <div class="item-status status-${asset.status?.current || 'available'}">${(asset.status?.current || 'available').toUpperCase()}</div>
-                    </div>
-                `).join('');
+                    `;
+                    container.appendChild(assetElement.firstElementChild);
+                });
                 
             } catch (error) {
                 console.error('Failed to load asset management:', error);
@@ -1173,6 +1499,279 @@
             } catch (error) {
                 console.error('Failed to load treasury management:', error);
             }
+        }
+        
+        // Asset Editor Functions
+        function editAsset(assetId) {
+            if (assetId && assetId !== 'new') {
+                // Load existing asset
+                intelligenceAPI.loadAssets().then(assets => {
+                    const asset = assets.find(a => a.asset_id === assetId);
+                    if (asset) {
+                        loadAssetIntoEditor(asset);
+                        currentEditingAsset = asset;
+                    }
+                });
+            } else {
+                // Create new asset
+                clearAssetEditor();
+                currentEditingAsset = null;
+            }
+            
+            document.getElementById('assetEditorModal').classList.add('active');
+        }
+        
+        function loadAssetIntoEditor(asset) {
+            document.getElementById('assetRealName').value = asset.real_name || '';
+            document.getElementById('assetCodename').value = asset.codename || '';
+            document.getElementById('assetClassification').value = asset.classification || 'CONFIDENTIAL';
+            document.getElementById('assetImageUrl').value = asset.image_url || '';
+            document.getElementById('assetDescription').value = asset.description || '';
+            document.getElementById('assetRealm').value = asset.location?.realm || 'Mortal Coil';
+            document.getElementById('assetRegion').value = asset.location?.region || '';
+            document.getElementById('assetMonthlySalary').value = asset.costs?.monthly_salary || 2500;
+            document.getElementById('assetRecruitmentFee').value = asset.costs?.recruitment_fee || 5000;
+            
+            // Load stats
+            const stats = asset.stats || {};
+            ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].forEach(stat => {
+                const value = stats[stat] || 5;
+                document.getElementById(`asset${stat.charAt(0).toUpperCase() + stat.slice(1)}`).value = value;
+                updateAssetStatDisplay(stat);
+            });
+            
+            // Load psychological stats
+            const psych = asset.psychological || {};
+            document.getElementById('assetLoyalty').value = psych.loyalty || 8;
+            document.getElementById('assetCorruptionResist').value = psych.corruption_resistance || 7;
+            document.getElementById('assetStressTolerance').value = psych.stress_tolerance || 6;
+            
+            // Update displays
+            document.getElementById('assetLoyaltyDisplay').textContent = document.getElementById('assetLoyalty').value;
+            document.getElementById('assetCorruptionResistDisplay').textContent = document.getElementById('assetCorruptionResist').value;
+            document.getElementById('assetStressToleranceDisplay').textContent = document.getElementById('assetStressTolerance').value;
+            
+            // Load specializations and equipment
+            assetSpecializations = asset.specializations || [];
+            assetEquipment = asset.equipment || [];
+            
+            renderAssetSpecializations();
+            renderAssetEquipment();
+            updateAssetPreview();
+        }
+        
+        function clearAssetEditor() {
+            document.getElementById('assetEditorForm').reset();
+            assetSpecializations = [];
+            assetEquipment = [];
+            
+            // Reset stats to default values
+            ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].forEach(stat => {
+                document.getElementById(`asset${stat.charAt(0).toUpperCase() + stat.slice(1)}`).value = 5;
+                updateAssetStatDisplay(stat);
+            });
+            
+            // Reset psychological displays
+            document.getElementById('assetLoyaltyDisplay').textContent = '8';
+            document.getElementById('assetCorruptionResistDisplay').textContent = '7';
+            document.getElementById('assetStressToleranceDisplay').textContent = '6';
+            
+            renderAssetSpecializations();
+            renderAssetEquipment();
+            updateAssetPreview();
+        }
+        
+        function updateAssetStatDisplay(statName) {
+            const slider = document.getElementById(`asset${statName.charAt(0).toUpperCase() + statName.slice(1)}`);
+            const display = document.getElementById(`asset${statName.charAt(0).toUpperCase() + statName.slice(1)}Value`);
+            
+            if (!slider || !display) return;
+            
+            display.textContent = slider.value;
+            
+            // Update color based on value
+            const value = parseInt(slider.value);
+            let color;
+            if (value <= 3) color = '#ff3366';
+            else if (value <= 6) color = '#ffa500';
+            else color = '#00ff88';
+            
+            display.style.background = `linear-gradient(135deg, ${color}, ${color}aa)`;
+            updateAssetPreview();
+        }
+        
+        function addAssetSpecialization() {
+            const input = document.getElementById('assetNewSpecialization');
+            const spec = input.value.trim();
+            
+            if (spec && !assetSpecializations.includes(spec)) {
+                assetSpecializations.push(spec);
+                input.value = '';
+                renderAssetSpecializations();
+                updateAssetPreview();
+            }
+        }
+        
+        function removeAssetSpecialization(spec) {
+            assetSpecializations = assetSpecializations.filter(s => s !== spec);
+            renderAssetSpecializations();
+            updateAssetPreview();
+        }
+        
+        function renderAssetSpecializations() {
+            const container = document.getElementById('assetSpecializationsList');
+            container.innerHTML = assetSpecializations.map(spec => 
+                `<span class="selected-asset-tag" style="cursor: pointer;" onclick="removeAssetSpecialization('${spec}')">${spec} ×</span>`
+            ).join('');
+        }
+        
+        function addAssetEquipment() {
+            const input = document.getElementById('assetNewEquipment');
+            const item = input.value.trim();
+            
+            if (item && !assetEquipment.includes(item)) {
+                assetEquipment.push(item);
+                input.value = '';
+                renderAssetEquipment();
+                updateAssetPreview();
+            }
+        }
+        
+        function removeAssetEquipment(item) {
+            assetEquipment = assetEquipment.filter(e => e !== item);
+            renderAssetEquipment();
+            updateAssetPreview();
+        }
+        
+        function renderAssetEquipment() {
+            const container = document.getElementById('assetEquipmentList');
+            container.innerHTML = assetEquipment.map(item => 
+                `<div class="list-item" style="margin-bottom: 0.5rem;">
+                    <span>${item}</span>
+                    <span onclick="removeAssetEquipment('${item}')" style="cursor: pointer; color: var(--accent-red);">×</span>
+                </div>`
+            ).join('');
+        }
+        
+        function updateAssetPreview() {
+            const preview = document.getElementById('assetPreviewCard');
+            const realName = document.getElementById('assetRealName').value || 'New Asset';
+            const codename = document.getElementById('assetCodename').value || 'Codename';
+            const realm = document.getElementById('assetRealm').value;
+            const region = document.getElementById('assetRegion').value || 'Unknown Location';
+            const salary = document.getElementById('assetMonthlySalary').value;
+            
+            const stats = {};
+            ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].forEach(stat => {
+                const element = document.getElementById(`asset${stat.charAt(0).toUpperCase() + stat.slice(1)}`);
+                stats[stat] = element ? element.value : 5;
+            });
+            
+            const totalStats = Object.values(stats).reduce((sum, val) => sum + parseInt(val), 0);
+            const realmInfo = intelligenceAPI.getRealmInfo(realm);
+            
+            preview.innerHTML = `
+                <div class="asset-card" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+                    <div class="asset-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                        <div class="asset-info">
+                            <div class="asset-name" style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.3rem;">${realName}</div>
+                            <div class="asset-location" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.3rem;">
+                                <i class="${realmInfo.icon}" style="color: ${realmInfo.color};"></i>
+                                ${realm} - ${region}
+                            </div>
+                            <div class="asset-location" style="font-size: 0.9rem; color: var(--text-secondary);">
+                                <i class="fas fa-dollar-sign"></i> 
+                                $${parseInt(salary || 0).toLocaleString()}/month
+                            </div>
+                        </div>
+                        <div class="asset-status status-available" style="padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; background: rgba(0, 255, 136, 0.2); color: var(--success); border: 1px solid var(--success);">AVAILABLE</div>
+                    </div>
+                    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 1rem;">
+                        ${Object.entries(stats).map(([stat, value]) => `
+                            <div class="stat-item" style="text-align: center; padding: 0.5rem; background: rgba(0, 0, 0, 0.3); border-radius: 6px; border: 1px solid var(--border-color);">
+                                <span class="stat-value" style="display: block; font-size: 1.2rem; font-weight: 700; color: var(--accent-blue);">${value}</span>
+                                <span class="stat-label" style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">${stat}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="text-align: center; margin-top: 1rem; padding: 0.5rem; background: rgba(0, 212, 255, 0.1); border-radius: 6px;">
+                        <strong>Total Stats: ${totalStats}</strong>
+                    </div>
+                    ${assetSpecializations.length > 0 ? `
+                        <div style="margin-top: 1rem;">
+                            <strong>Specializations:</strong> ${assetSpecializations.join(', ')}
+                        </div>
+                    ` : ''}
+                    ${assetEquipment.length > 0 ? `
+                        <div style="margin-top: 0.5rem;">
+                            <strong>Equipment:</strong> ${assetEquipment.join(', ')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+        
+        async function saveAssetFromEditor() {
+            if (!intelligenceAPI.canWrite()) {
+                showNotification('GitHub authentication required', 'error');
+                return;
+            }
+            
+            try {
+                const assetData = {
+                    real_name: document.getElementById('assetRealName').value,
+                    codename: document.getElementById('assetCodename').value || document.getElementById('assetRealName').value,
+                    classification: document.getElementById('assetClassification').value,
+                    image_url: document.getElementById('assetImageUrl').value,
+                    description: document.getElementById('assetDescription').value,
+                    location: {
+                        realm: document.getElementById('assetRealm').value,
+                        region: document.getElementById('assetRegion').value
+                    },
+                    stats: {},
+                    costs: {
+                        monthly_salary: parseInt(document.getElementById('assetMonthlySalary').value),
+                        recruitment_fee: parseInt(document.getElementById('assetRecruitmentFee').value)
+                    },
+                    psychological: {
+                        loyalty: parseInt(document.getElementById('assetLoyalty').value),
+                        corruption_resistance: parseInt(document.getElementById('assetCorruptionResist').value),
+                        stress_tolerance: parseInt(document.getElementById('assetStressTolerance').value)
+                    },
+                    specializations: assetSpecializations,
+                    equipment: assetEquipment
+                };
+                
+                // Collect stats
+                ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].forEach(stat => {
+                    const element = document.getElementById(`asset${stat.charAt(0).toUpperCase() + stat.slice(1)}`);
+                    assetData.stats[stat] = parseInt(element.value);
+                });
+                
+                showNotification('Saving asset...', 'warning');
+                
+                if (currentEditingAsset) {
+                    // Update existing asset
+                    await intelligenceAPI.updateAsset(currentEditingAsset.asset_id, assetData);
+                    showNotification(`Asset "${assetData.real_name}" updated successfully!`, 'success');
+                } else {
+                    // Create new asset
+                    await intelligenceAPI.createAsset(assetData);
+                    showNotification(`Asset "${assetData.real_name}" created successfully!`, 'success');
+                }
+                
+                closeAssetEditor();
+                await loadAllGMData();
+                
+            } catch (error) {
+                console.error('Failed to save asset:', error);
+                showNotification(`Failed to save asset: ${error.message}`, 'error');
+            }
+        }
+        
+        function closeAssetEditor() {
+            document.getElementById('assetEditorModal').classList.remove('active');
+            currentEditingAsset = null;
         }
         
         async function createNewAsset(event) {
@@ -1369,11 +1968,6 @@
             alert(`Random Event Generated:\n\n${randomEvent}\n\nConsider how this affects your ongoing operations and story.`);
         }
         
-        function editAsset(assetId) {
-            showNotification('Asset editing interface coming soon!', 'warning');
-            // TODO: Implement asset editing interface
-        }
-        
         function editMission(missionId) {
             showNotification('Mission editing interface coming soon!', 'warning');
             // TODO: Implement mission editing interface
@@ -1428,7 +2022,7 @@
         
         // Close modals when clicking outside
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal')) {
+            if (e.target.classList.contains('modal') || e.target.classList.contains('asset-editor-modal')) {
                 e.target.classList.remove('active');
             }
         });
@@ -1438,6 +2032,19 @@
             if (e.key === 'Enter' && !document.getElementById('passwordCheck').classList.contains('hidden')) {
                 checkPassword();
             }
+        });
+        
+        // Initialize asset preview when DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize stat displays when the editor opens
+            setTimeout(() => {
+                if (document.getElementById('assetEditorModal')) {
+                    ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].forEach(stat => {
+                        updateAssetStatDisplay(stat);
+                    });
+                    updateAssetPreview();
+                }
+            }, 100);
         });
     </script>
 </body>
