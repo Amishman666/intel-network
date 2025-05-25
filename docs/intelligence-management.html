@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INTELLIGENCE ARCHIVE // NETWORK ACCESS</title>
+    <title>INTELLIGENCE MANAGEMENT // GM TOOLS</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
@@ -12,14 +12,15 @@
             --primary-bg: #0a0b0d;
             --secondary-bg: #1a1d23;
             --tertiary-bg: #252830;
-            --accent-blue: #00d4ff;
-            --accent-amber: #ffa500;
             --accent-red: #ff3366;
+            --accent-amber: #ffa500;
+            --accent-blue: #00d4ff;
             --accent-green: #00ff88;
             --text-primary: #ffffff;
             --text-secondary: #b8bcc8;
             --text-muted: #6c7293;
             --border-color: #3d4147;
+            --glow-red: 0 0 20px rgba(255, 51, 102, 0.3);
             --glow-blue: 0 0 20px rgba(0, 212, 255, 0.3);
         }
         
@@ -35,13 +36,13 @@
             color: var(--text-primary);
             min-height: 100vh;
             background-image: 
-                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.03) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(255, 51, 102, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.03) 0%, transparent 50%);
         }
         
         .header {
             background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
-            border-bottom: 2px solid var(--accent-blue);
+            border-bottom: 2px solid var(--accent-red);
             padding: 1rem 2rem;
             position: sticky;
             top: 0;
@@ -62,8 +63,8 @@
             font-family: 'Orbitron', monospace;
             font-size: 1.8rem;
             font-weight: 900;
-            color: var(--accent-blue);
-            text-shadow: var(--glow-blue);
+            color: var(--accent-red);
+            text-shadow: var(--glow-red);
             letter-spacing: 2px;
         }
         
@@ -85,7 +86,7 @@
             transition: all 0.3s ease;
         }
         
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover {
             border-color: var(--accent-blue);
             color: var(--accent-blue);
             box-shadow: var(--glow-blue);
@@ -95,257 +96,297 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 2rem;
         }
         
-        .intelligence-header {
+        .panel {
             background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
             position: relative;
         }
         
-        .intelligence-header::before {
+        .panel::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
         }
         
-        .header-title {
+        .panel-title {
             font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: var(--accent-blue);
+            color: var(--accent-red);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
             margin-bottom: 0.5rem;
-        }
-        
-        .header-subtitle {
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
         }
         
-        .search-section {
-            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .search-input {
+        .form-input, .form-select, .form-textarea {
             width: 100%;
-            padding: 1rem;
+            padding: 0.75rem;
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
             border-radius: 6px;
             color: var(--text-primary);
             font-family: 'Rajdhani', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
         
-        .search-input:focus {
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            border-color: var(--accent-red);
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.2);
         }
         
-        .intelligence-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.5rem;
+        .form-textarea {
+            min-height: 300px;
+            resize: vertical;
+            font-family: 'Rajdhani', sans-serif;
+            line-height: 1.5;
         }
         
-        .intel-card {
-            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+        .visibility-toggle {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
             cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--accent-red);
+            transition: .4s;
+            border-radius: 30px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--accent-green);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
         
-        .intel-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-amber), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-red), #cc1144);
+            color: white;
+            border: 1px solid var(--accent-red);
         }
         
-        .intel-card:hover {
+        .btn-primary:hover {
+            box-shadow: var(--glow-red);
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-green), #00cc66);
+            color: white;
+            border: 1px solid var(--accent-green);
+        }
+        
+        .btn-blue {
+            background: linear-gradient(135deg, var(--accent-blue), #0099cc);
+            color: white;
+            border: 1px solid var(--accent-blue);
+        }
+        
+        .intel-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .intel-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .intel-item:hover {
             border-color: var(--accent-blue);
-            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.2);
-            transform: translateY(-4px);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
         }
         
-        .intel-card:hover::before {
-            opacity: 1;
+        .intel-item.selected {
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: var(--glow-blue);
         }
         
         .intel-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         
         .intel-title {
-            font-size: 1.2rem;
             font-weight: 700;
             color: var(--text-primary);
-            line-height: 1.3;
-            font-family: 'Orbitron', monospace;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .classification-badge {
-            padding: 0.25rem 0.5rem;
-            background: rgba(255, 165, 0, 0.2);
-            color: var(--accent-amber);
-            border: 1px solid var(--accent-amber);
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 1rem;
         }
         
         .intel-meta {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
+            margin-bottom: 0.5rem;
         }
         
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        
-        .intel-content {
-            font-size: 1rem;
-            line-height: 1.6;
+        .intel-preview {
+            font-size: 0.9rem;
             color: var(--text-secondary);
-            white-space: pre-line;
-        }
-        
-        .intel-content.preview {
             display: -webkit-box;
-            -webkit-line-clamp: 4;
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
         
-        .intel-content.expanded {
-            display: block;
-        }
-        
-        .expand-btn {
-            margin-top: 1rem;
-            background: none;
-            border: 1px solid var(--accent-blue);
-            color: var(--accent-blue);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Rajdhani', sans-serif;
+        .visibility-badge {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
         }
         
-        .expand-btn:hover {
-            background: var(--accent-blue);
-            color: var(--primary-bg);
-            box-shadow: var(--glow-blue);
+        .visible {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
         }
         
-        .no-intelligence {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-        }
-        
-        .loading {
-            text-align: center;
-            color: var(--accent-blue);
-            padding: 4rem 2rem;
-        }
-        
-        .error-state {
-            text-align: center;
+        .hidden {
+            background: rgba(255, 51, 102, 0.2);
             color: var(--accent-red);
-            padding: 4rem 2rem;
+            border: 1px solid var(--accent-red);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .button-group .btn {
+            flex: 1;
+        }
+        
+        .auth-warning {
             background: rgba(255, 51, 102, 0.1);
             border: 1px solid var(--accent-red);
-            border-radius: 12px;
-        }
-        
-        .stats-display {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .stat-item {
-            text-align: center;
-            padding: 1rem;
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid var(--accent-blue);
             border-radius: 8px;
-            min-width: 120px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
         }
         
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent-blue);
-            font-family: 'Orbitron', monospace;
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
         }
         
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 0.25rem;
+        .notification.show {
+            transform: translateX(0);
         }
         
-        @media (max-width: 768px) {
-            .intelligence-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-display {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
+        .notification.success {
+            background: var(--accent-green);
+        }
+        
+        .notification.error {
+            background: var(--accent-red);
+        }
+        
+        .notification.warning {
+            background: var(--accent-amber);
+        }
+        
+        @media (max-width: 1024px) {
             .container {
-                padding: 1rem;
+                grid-template-columns: 1fr;
+                gap: 1rem;
             }
         }
     </style>
@@ -354,54 +395,106 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <i class="fas fa-brain"></i> INTELLIGENCE ARCHIVE
+                <i class="fas fa-brain"></i> INTELLIGENCE MANAGEMENT
             </div>
             <nav class="nav-links">
-                <a href="index.html" class="nav-link">Operations Board</a>
-                <a href="#" class="nav-link active">Intelligence</a>
+                <a href="gm.html" class="nav-link">← Back to GM Tools</a>
+                <a href="index.html" class="nav-link">Player View</a>
             </nav>
         </div>
     </header>
     
     <div class="container">
-        <!-- Header Section -->
-        <div class="intelligence-header">
-            <div class="header-title">
-                <i class="fas fa-database"></i> Intelligence Database
-            </div>
-            <div class="header-subtitle">
-                Classified intelligence gathered from network operations
+        <!-- Intelligence Entry Form -->
+        <div class="panel">
+            <h2 class="panel-title"><i class="fas fa-plus"></i> Create/Edit Intelligence</h2>
+            
+            <div id="authWarning" class="auth-warning" style="display: none;">
+                <h3 style="color: var(--accent-red); margin-bottom: 0.5rem;">
+                    <i class="fas fa-exclamation-triangle"></i> Authentication Required
+                </h3>
+                <p style="margin-bottom: 1rem;">You need GitHub authentication to save intelligence entries.</p>
+                <button class="btn btn-primary" onclick="showTokenModal()">
+                    <i class="fas fa-key"></i> Add GitHub Token
+                </button>
             </div>
             
-            <div class="stats-display">
-                <div class="stat-item">
-                    <div class="stat-value" id="totalIntel">0</div>
-                    <div class="stat-label">Intelligence Reports</div>
+            <form id="intelligenceForm" onsubmit="saveIntelligence(event)">
+                <div class="form-group">
+                    <label class="form-label">Intelligence Title</label>
+                    <input type="text" id="intelTitle" class="form-input" 
+                           placeholder="What was discovered?" required>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="recentIntel">0</div>
-                    <div class="stat-label">This Month</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Source Mission</label>
+                    <select id="sourceMission" class="form-select" required>
+                        <option value="">Select source mission...</option>
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="sourceMissions">0</div>
-                    <div class="stat-label">Source Missions</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Player Visibility</label>
+                    <div class="visibility-toggle">
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="playerVisible" checked>
+                            <span class="slider"></span>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: var(--text-primary);">
+                                <span id="visibilityText">Visible to Players</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Toggle to show/hide from player interface
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Intelligence Content</label>
+                    <textarea id="intelContent" class="form-textarea" 
+                              placeholder="Enter the intelligence information here...
+
+You can format this however you want:
+• Bullet points
+• Paragraphs  
+• Lists
+• Whatever makes sense for the information
+
+This is what players will see (if visible is enabled)." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Private GM Notes (Optional)</label>
+                    <textarea id="gmNotes" class="form-textarea" style="min-height: 100px;"
+                              placeholder="Private notes that players will never see..."></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Save Intelligence
+                    </button>
+                    <button type="button" class="btn btn-blue" onclick="clearForm()">
+                        <i class="fas fa-file"></i> New Entry
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="deleteIntelligence()" id="deleteBtn" style="display: none;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </form>
         </div>
         
-        <!-- Search Section -->
-        <div class="search-section">
-            <input type="text" class="search-input" id="searchInput" 
-                   placeholder="Search intelligence reports...">
-        </div>
-        
-        <!-- Intelligence Grid -->
-        <div class="intelligence-grid" id="intelligenceGrid">
-            <div class="loading">
-                <i class="fas fa-satellite-dish fa-spin fa-3x"></i>
-                <p style="margin-top: 1rem; font-family: 'Orbitron', monospace;">
-                    ACCESSING CLASSIFIED DATABASE...
-                </p>
+        <!-- Existing Intelligence List -->
+        <div class="panel">
+            <h2 class="panel-title"><i class="fas fa-database"></i> Existing Intelligence</h2>
+            
+            <div class="intel-list" id="intelligenceList">
+                <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                    <i class="fas fa-satellite-dish fa-spin fa-2x"></i>
+                    <p style="margin-top: 1rem;">Loading intelligence entries...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -411,235 +504,296 @@
     <script src="js/data-loader.js"></script>
     
     <script>
-        let allIntelligence = [];
-        let filteredIntelligence = [];
+        let currentEditingId = null;
+        let existingIntelligence = [];
         
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            initializeIntelligenceView();
+            initializeIntelligenceManager();
+            updateAuthStatus();
         });
         
-        async function initializeIntelligenceView() {
+        async function initializeIntelligenceManager() {
             try {
-                await loadPlayerIntelligence();
-                setupSearch();
+                // Load missions for dropdown
+                await loadMissionsDropdown();
+                
+                // Load existing intelligence
+                await loadExistingIntelligence();
+                
+                // Setup visibility toggle listener
+                document.getElementById('playerVisible').addEventListener('change', updateVisibilityText);
+                updateVisibilityText();
                 
             } catch (error) {
-                console.error('Failed to initialize intelligence view:', error);
-                showErrorState(error);
+                console.error('Failed to initialize intelligence manager:', error);
+                showNotification('Failed to load data', 'error');
             }
         }
         
-        async function loadPlayerIntelligence() {
+        function updateAuthStatus() {
+            const authWarning = document.getElementById('authWarning');
+            
+            if (intelligenceAPI && intelligenceAPI.canWrite()) {
+                authWarning.style.display = 'none';
+            } else {
+                authWarning.style.display = 'block';
+            }
+        }
+        
+        async function loadMissionsDropdown() {
             try {
-                // Check if intelligence directory exists
-                const intelFiles = await intelligenceAPI.listDirectory('data/intelligence');
+                const operations = await intelligenceAPI.loadOperations();
+                const select = document.getElementById('sourceMission');
                 
-                if (intelFiles.length === 0) {
-                    showNoIntelligence();
+                // Clear existing options except the first one
+                select.innerHTML = '<option value="">Select source mission...</option>';
+                
+                operations.forEach(operation => {
+                    const option = document.createElement('option');
+                    option.value = operation.operation_id;
+                    option.textContent = `${operation.codename} (${operation.operation_id})`;
+                    select.appendChild(option);
+                });
+                
+                console.log(`Loaded ${operations.length} missions for dropdown`);
+                
+            } catch (error) {
+                console.error('Failed to load missions:', error);
+                showNotification('Failed to load missions', 'error');
+            }
+        }
+        
+        async function loadExistingIntelligence() {
+            try {
+                // Load intelligence using the API
+                const intelligence = await intelligenceAPI.loadIntelligence();
+                
+                const container = document.getElementById('intelligenceList');
+                container.innerHTML = '';
+                
+                if (intelligence.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                            <i class="fas fa-brain fa-2x"></i>
+                            <p style="margin-top: 1rem;">No intelligence entries yet</p>
+                            <p style="font-size: 0.9rem;">Create your first intelligence entry</p>
+                        </div>
+                    `;
                     return;
                 }
                 
-                allIntelligence = [];
+                existingIntelligence = intelligence;
                 
-                for (const file of intelFiles) {
-                    try {
-                        const { content } = await intelligenceAPI.fetchFile(file.path);
-                        const intelData = intelligenceAPI.parseYAML(content);
-                        
-                        // Only include intelligence that's visible to players
-                        if (intelData.visibility?.player_visible !== false) {
-                            intelData._filename = file.name;
-                            allIntelligence.push(intelData);
-                        }
-                        
-                    } catch (error) {
-                        console.error(`Failed to load intelligence ${file.name}:`, error);
-                    }
-                }
-                
-                // Sort by date (newest first)
-                allIntelligence.sort((a, b) => {
-                    const dateA = new Date(a.created_date || '1970-01-01');
-                    const dateB = new Date(b.created_date || '1970-01-01');
-                    return dateB - dateA;
+                intelligence.forEach(intel => {
+                    const item = createIntelligenceListItem(intel);
+                    container.appendChild(item);
                 });
                 
-                filteredIntelligence = [...allIntelligence];
-                updateStats();
-                renderIntelligence();
-                
-                console.log(`Loaded ${allIntelligence.length} player-visible intelligence entries`);
+                console.log(`Loaded ${intelligence.length} intelligence entries`);
                 
             } catch (error) {
-                console.error('Failed to load intelligence:', error);
-                showErrorState(error);
+                console.error('Failed to load existing intelligence:', error);
+                const container = document.getElementById('intelligenceList');
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--accent-red); padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        <p style="margin-top: 1rem;">Failed to load intelligence</p>
+                        <p style="font-size: 0.9rem;">${error.message}</p>
+                    </div>
+                `;
             }
         }
         
-        function updateStats() {
-            const now = new Date();
-            const thisMonth = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+        function createIntelligenceListItem(intel) {
+            const item = document.createElement('div');
+            item.className = 'intel-item';
+            item.onclick = () => editIntelligence(intel);
             
-            const recentCount = allIntelligence.filter(intel => 
-                intel.created_date && intel.created_date.startsWith(thisMonth)
-            ).length;
+            const preview = intel.content ? intel.content.substring(0, 100) + '...' : 'No content';
+            const isVisible = intel.visibility?.player_visible !== false;
             
-            const uniqueMissions = new Set(allIntelligence.map(intel => intel.source_mission)).size;
+            item.innerHTML = `
+                <div class="intel-header">
+                    <div class="intel-title">${intel.title || 'Untitled Intelligence'}</div>
+                    <div class="visibility-badge ${isVisible ? 'visible' : 'hidden'}">
+                        ${isVisible ? 'VISIBLE' : 'HIDDEN'}
+                    </div>
+                </div>
+                <div class="intel-meta">
+                    <i class="fas fa-calendar"></i> ${intel.created_date || 'No date'}
+                    <span style="margin-left: 1rem;"><i class="fas fa-crosshairs"></i> ${intel.source_mission || 'No mission'}</span>
+                </div>
+                <div class="intel-preview">${preview}</div>
+            `;
             
-            document.getElementById('totalIntel').textContent = allIntelligence.length;
-            document.getElementById('recentIntel').textContent = recentCount;
-            document.getElementById('sourceMissions').textContent = uniqueMissions;
+            return item;
         }
         
-        function renderIntelligence() {
-            const container = document.getElementById('intelligenceGrid');
-            container.innerHTML = '';
+        function editIntelligence(intel) {
+            // Clear previous selections
+            document.querySelectorAll('.intel-item').forEach(item => {
+                item.classList.remove('selected');
+            });
             
-            if (filteredIntelligence.length === 0) {
-                if (allIntelligence.length === 0) {
-                    showNoIntelligence();
-                } else {
-                    container.innerHTML = `
-                        <div class="no-intelligence">
-                            <i class="fas fa-search fa-2x"></i>
-                            <h3 style="margin: 1rem 0; color: var(--text-primary);">No Matching Intelligence</h3>
-                            <p>Try adjusting your search terms</p>
-                        </div>
-                    `;
-                }
+            // Select this item
+            event.target.closest('.intel-item').classList.add('selected');
+            
+            // Populate form
+            currentEditingId = intel.intelligence_id;
+            document.getElementById('intelTitle').value = intel.title || '';
+            document.getElementById('sourceMission').value = intel.source_mission || '';
+            document.getElementById('playerVisible').checked = intel.visibility?.player_visible !== false;
+            document.getElementById('intelContent').value = intel.content || '';
+            document.getElementById('gmNotes').value = intel.notes || '';
+            
+            updateVisibilityText();
+            
+            // Show delete button
+            document.getElementById('deleteBtn').style.display = 'block';
+        }
+        
+        function updateVisibilityText() {
+            const checkbox = document.getElementById('playerVisible');
+            const text = document.getElementById('visibilityText');
+            
+            if (checkbox.checked) {
+                text.textContent = 'Visible to Players';
+                text.style.color = 'var(--accent-green)';
+            } else {
+                text.textContent = 'Hidden from Players';
+                text.style.color = 'var(--accent-red)';
+            }
+        }
+        
+        async function saveIntelligence(event) {
+            event.preventDefault();
+            
+            if (!intelligenceAPI || !intelligenceAPI.canWrite()) {
+                showNotification('GitHub authentication required', 'error');
                 return;
             }
             
-            filteredIntelligence.forEach(intel => {
-                const card = createIntelligenceCard(intel);
-                container.appendChild(card);
-            });
-        }
-        
-        function createIntelligenceCard(intel) {
-            const card = document.createElement('div');
-            card.className = 'intel-card';
-            
-            // Determine if content should be truncated
-            const content = intel.content || 'No content available';
-            const shouldTruncate = content.length > 200;
-            const cardId = `card-${intel.intelligence_id}`;
-            
-            card.innerHTML = `
-                <div class="intel-header">
-                    <div class="intel-title">${intel.title || 'Untitled Intelligence'}</div>
-                    <div class="classification-badge">${intel.visibility?.classification || 'CLASSIFIED'}</div>
-                </div>
+            try {
+                const title = document.getElementById('intelTitle').value.trim();
+                const sourceMission = document.getElementById('sourceMission').value;
+                const playerVisible = document.getElementById('playerVisible').checked;
+                const content = document.getElementById('intelContent').value.trim();
+                const gmNotes = document.getElementById('gmNotes').value.trim();
                 
-                <div class="intel-meta">
-                    <div class="meta-item">
-                        <i class="fas fa-calendar"></i>
-                        <span>${formatDate(intel.created_date)}</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fas fa-crosshairs"></i>
-                        <span>${intel.source_mission || 'Unknown'}</span>
-                    </div>
-                </div>
-                
-                <div class="intel-content ${shouldTruncate ? 'preview' : 'expanded'}" id="content-${cardId}">
-                    ${content}
-                </div>
-                
-                ${shouldTruncate ? `
-                    <button class="expand-btn" onclick="toggleExpand('${cardId}')" id="btn-${cardId}">
-                        <i class="fas fa-chevron-down"></i> Show Full Report
-                    </button>
-                ` : ''}
-            `;
-            
-            return card;
-        }
-        
-        function toggleExpand(cardId) {
-            const content = document.getElementById(`content-${cardId}`);
-            const button = document.getElementById(`btn-${cardId}`);
-            
-            if (content.classList.contains('preview')) {
-                content.classList.remove('preview');
-                content.classList.add('expanded');
-                button.innerHTML = '<i class="fas fa-chevron-up"></i> Show Less';
-            } else {
-                content.classList.remove('expanded');
-                content.classList.add('preview');
-                button.innerHTML = '<i class="fas fa-chevron-down"></i> Show Full Report';
-            }
-        }
-        
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase().trim();
-                
-                if (searchTerm === '') {
-                    filteredIntelligence = [...allIntelligence];
-                } else {
-                    filteredIntelligence = allIntelligence.filter(intel => {
-                        const title = (intel.title || '').toLowerCase();
-                        const content = (intel.content || '').toLowerCase();
-                        const mission = (intel.source_mission || '').toLowerCase();
-                        
-                        return title.includes(searchTerm) || 
-                               content.includes(searchTerm) || 
-                               mission.includes(searchTerm);
-                    });
+                if (!title || !sourceMission || !content) {
+                    showNotification('Please fill in all required fields', 'warning');
+                    return;
                 }
                 
-                renderIntelligence();
-            });
-        }
-        
-        function formatDate(dateString) {
-            if (!dateString) return 'Unknown Date';
-            
-            try {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
+                // Generate intelligence ID if new
+                const intelId = currentEditingId || `INTEL-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
+                
+                // Create intelligence data
+                const intelligenceData = {
+                    intelligence_id: intelId,
+                    title: title,
+                    source_mission: sourceMission,
+                    created_date: new Date().toISOString().split('T')[0],
+                    created_by: 'Handler-Prime',
+                    
+                    visibility: {
+                        player_visible: playerVisible,
+                        classification: 'CLASSIFIED'
+                    },
+                    
+                    content: content,
+                    
+                    metadata: {
+                        filename: `intel_${intelId.toLowerCase().replace(/[^a-z0-9]/g, '_')}.yml`,
+                        last_updated: new Date().toISOString()
+                    },
+                    
+                    tags: [],
+                    notes: gmNotes
+                };
+                
+                showNotification('Saving intelligence...', 'warning');
+                
+                if (currentEditingId) {
+                    // Update existing
+                    await intelligenceAPI.updateIntelligence(currentEditingId, intelligenceData);
+                } else {
+                    // Create new
+                    await intelligenceAPI.createIntelligence(intelligenceData);
+                }
+                
+                showNotification(`Intelligence "${title}" saved successfully!`, 'success');
+                
+                // Reload intelligence list
+                await loadExistingIntelligence();
+                
+                // Clear form if it was a new entry
+                if (!currentEditingId) {
+                    clearForm();
+                }
+                
             } catch (error) {
-                return dateString;
+                console.error('Failed to save intelligence:', error);
+                showNotification(`Failed to save intelligence: ${error.message}`, 'error');
             }
         }
         
-        function showNoIntelligence() {
-            const container = document.getElementById('intelligenceGrid');
-            container.innerHTML = `
-                <div class="no-intelligence">
-                    <i class="fas fa-brain fa-3x"></i>
-                    <h3 style="margin: 1rem 0; color: var(--text-primary);">No Intelligence Available</h3>
-                    <p>Intelligence reports will appear here as your network gathers information.</p>
-                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">
-                        Complete missions to discover new intelligence.
-                    </p>
-                </div>
-            `;
+        async function deleteIntelligence() {
+            if (!currentEditingId) return;
+            
+            const title = document.getElementById('intelTitle').value;
+            if (!confirm(`Are you sure you want to delete "${title}"?\n\nThis action cannot be undone.`)) {
+                return;
+            }
+            
+            try {
+                showNotification('Delete functionality requires GitHub API enhancement', 'warning');
+                showNotification('For now, manually delete the file from GitHub repository', 'warning');
+                
+                // TODO: Implement actual file deletion when GitHub delete API is added
+                
+            } catch (error) {
+                console.error('Failed to delete intelligence:', error);
+                showNotification(`Failed to delete intelligence: ${error.message}`, 'error');
+            }
         }
         
-        function showErrorState(error) {
-            const container = document.getElementById('intelligenceGrid');
-            container.innerHTML = `
-                <div class="error-state">
-                    <i class="fas fa-exclamation-triangle fa-3x"></i>
-                    <h3 style="margin: 1rem 0; color: var(--accent-red);">Database Connection Failed</h3>
-                    <p>Unable to access intelligence database.</p>
-                    <p style="margin-top: 1rem; font-size: 0.9rem;">
-                        ${error.message}
-                    </p>
-                    <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--accent-red); color: white; border: none; border-radius: 4px; cursor: pointer;">
-                        Retry Connection
-                    </button>
-                </div>
-            `;
+        function clearForm() {
+            currentEditingId = null;
+            document.getElementById('intelligenceForm').reset();
+            document.getElementById('playerVisible').checked = true;
+            updateVisibilityText();
+            document.getElementById('deleteBtn').style.display = 'none';
+            
+            // Clear selections
+            document.querySelectorAll('.intel-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+        }
+        
+        function showTokenModal() {
+            const token = prompt('Enter your GitHub Personal Access Token:\n\n(Create one at GitHub Settings > Developer settings > Personal access tokens)\nNeeds "repo" scope for write access.');
+            if (token) {
+                intelligenceAPI.setGitHubToken(token);
+                updateAuthStatus();
+                showNotification('GitHub token saved successfully!', 'success');
+            }
+        }
+        
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'exclamation-triangle'}"></i> ${message}`;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
         }
     </script>
 </body>
