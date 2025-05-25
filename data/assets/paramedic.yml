@@ -1,0 +1,68 @@
+asset_id: ASSET-452488
+codename: Paramedic
+real_name: Emily Carter
+classification: CONFIDENTIAL
+recruited_date: '2025-05-25'
+recruited_by: Handler-Prime
+description: >-
+  Emily Carter had been working as an EMT for several years before her life took
+  a drastic turn. She was good at her job, known for her calm demeanor under
+  pressure and her ability to make patients feel safe even in the direst
+  situations. She always felt at home in the high-stakes world of emergency
+  response, where she could make a real difference.
+
+
+  Her dedication to helping others came from a difficult childhood where she
+  often had to fend for herself. Raised in the rougher parts of town, Emily was
+  no stranger to danger, but she never believed in the supernatural. To her, the
+  only monsters were the human kind—until one fateful night shift proved
+  otherwise.
+background: ''
+image_url: ''
+location:
+  realm: Mortal Coil
+  region: Seattle, Washington
+  specific_area: ''
+  mobility:
+    can_travel_realms: false
+    travel_time_hours: 0
+    requires_escort: false
+stats:
+  skill: 5
+  stealth: 3
+  combat: 2
+  tech: 4
+  social: 7
+  will: 7
+costs:
+  recruitment_fee: 5000
+  monthly_salary: 2500
+  danger_bonus_multiplier: 1.2
+  realm_bonus: 0
+status:
+  current: available
+  since_date: '2025-05-25'
+  availability_date: null
+  deployment_details: null
+specializations:
+  - Paramedic
+condition:
+  injury_level: none
+  injury_description: null
+  stat_penalties: {}
+  recovery_date: null
+  medical_notes: null
+equipment:
+  - Ambulance
+psychological:
+  loyalty: 8
+  corruption_resistance: 5
+  stress_tolerance: 5
+  quirks: []
+mission_history:
+  total_missions: 0
+  success_rate: 0
+  failures: 0
+  injuries_sustained: 0
+  commendations: []
+notes: ''
