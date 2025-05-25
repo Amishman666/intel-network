@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MISSION RESOLUTION // GM TOOLS</title>
+    <title>INTELLIGENCE MANAGEMENT // GM TOOLS</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
@@ -55,7 +55,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
         }
         
@@ -68,19 +68,57 @@
             letter-spacing: 2px;
         }
         
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            box-shadow: var(--glow-blue);
+        }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 2rem;
         }
         
-        .mission-selector {
+        .panel {
             background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 1.5rem;
-            margin-bottom: 2rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
         }
         
         .panel-title {
@@ -90,98 +128,11 @@
             color: var(--accent-red);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 1rem;
-        }
-        
-        .active-missions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1rem;
-        }
-        
-        .mission-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .mission-card:hover {
-            border-color: var(--accent-blue);
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
-        }
-        
-        .mission-card.selected {
-            border-color: var(--accent-blue);
-            background: rgba(0, 212, 255, 0.1);
-            box-shadow: var(--glow-blue);
-        }
-        
-        .resolution-panel {
-            display: none;
-            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-        
-        .resolution-panel.active {
-            display: block;
-        }
-        
-        .resolution-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-        
-        .success-selector {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .success-option {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .success-option:hover {
-            border-color: var(--accent-blue);
-        }
-        
-        .success-option.selected {
-            border-color: var(--accent-green);
-            background: rgba(0, 255, 136, 0.1);
-        }
-        
-        .success-radio {
-            accent-color: var(--accent-green);
-        }
-        
-        .intelligence-form {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .form-label {
@@ -208,29 +159,69 @@
         
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+            border-color: var(--accent-red);
+            box-shadow: 0 0 10px rgba(255, 51, 102, 0.2);
         }
         
         .form-textarea {
-            min-height: 100px;
+            min-height: 300px;
             resize: vertical;
+            font-family: 'Rajdhani', sans-serif;
+            line-height: 1.5;
         }
         
-        .intel-item {
-            background: rgba(255, 165, 0, 0.1);
-            border: 1px solid var(--accent-amber);
+        .visibility-toggle {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 1rem;
-            margin-bottom: 1rem;
         }
         
-        .intel-preview {
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid var(--accent-blue);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--accent-red);
+            transition: .4s;
+            border-radius: 30px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--accent-green);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(30px);
         }
         
         .btn {
@@ -270,77 +261,133 @@
             border: 1px solid var(--accent-blue);
         }
         
-        .timer-display {
-            background: rgba(255, 165, 0, 0.1);
-            border: 1px solid var(--accent-amber);
-            border-radius: 6px;
-            padding: 0.5rem;
-            margin: 0.5rem 0;
-            font-family: 'Orbitron', monospace;
-            color: var(--accent-amber);
-            text-align: center;
+        .intel-list {
+            max-height: 600px;
+            overflow-y: auto;
         }
         
-        .asset-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 0.5rem 0;
-        }
-        
-        .asset-tag {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--accent-green);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        .follow-up-section {
+        .intel-item {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .tag-input {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            align-items: center;
-            padding: 0.75rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            min-height: 3rem;
-        }
-        
-        .tag {
-            background: var(--accent-blue);
-            color: var(--primary-bg);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        .tag-remove {
+            margin-bottom: 1rem;
             cursor: pointer;
-            font-weight: bold;
+            transition: all 0.3s ease;
         }
         
-        .tag-add-input {
-            border: none;
-            background: transparent;
+        .intel-item:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+        }
+        
+        .intel-item.selected {
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: var(--glow-blue);
+        }
+        
+        .intel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+        
+        .intel-title {
+            font-weight: 700;
             color: var(--text-primary);
-            outline: none;
-            flex-grow: 1;
-            min-width: 100px;
-            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .intel-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        
+        .intel-preview {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .visibility-badge {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .visible {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+        
+        .hidden {
+            background: rgba(255, 51, 102, 0.2);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .button-group .btn {
+            flex: 1;
+        }
+        
+        .auth-warning {
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid var(--accent-red);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: var(--accent-green);
+        }
+        
+        .notification.error {
+            background: var(--accent-red);
+        }
+        
+        .notification.warning {
+            background: var(--accent-amber);
+        }
+        
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
@@ -348,400 +395,435 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <i class="fas fa-gavel"></i> MISSION RESOLUTION
+                <i class="fas fa-brain"></i> INTELLIGENCE MANAGEMENT
             </div>
-            <div style="display: flex; gap: 1rem;">
-                <a href="gm.html" style="color: var(--accent-blue); text-decoration: none;">← Back to GM Panel</a>
-            </div>
+            <nav class="nav-links">
+                <a href="gm.html" class="nav-link">← Back to GM Tools</a>
+                <a href="index.html" class="nav-link">Player View</a>
+            </nav>
         </div>
     </header>
     
     <div class="container">
-        <!-- Mission Selector -->
-        <div class="mission-selector">
-            <h2 class="panel-title"><i class="fas fa-crosshairs"></i> Active Missions</h2>
-            <div class="active-missions-grid" id="activeMissions">
-                <!-- Sample mission card -->
-                <div class="mission-card" onclick="selectMission(this, 'OP-2025-001')">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                        <div style="font-weight: 700; color: var(--accent-blue);">OPERATION NIGHTFALL</div>
-                        <div style="font-size: 0.8rem; padding: 0.2rem 0.5rem; background: rgba(255, 51, 102, 0.2); color: var(--accent-red); border-radius: 4px;">
-                            CLASSIFIED
+        <!-- Intelligence Entry Form -->
+        <div class="panel">
+            <h2 class="panel-title"><i class="fas fa-plus"></i> Create/Edit Intelligence</h2>
+            
+            <div id="authWarning" class="auth-warning" style="display: none;">
+                <h3 style="color: var(--accent-red); margin-bottom: 0.5rem;">
+                    <i class="fas fa-exclamation-triangle"></i> Authentication Required
+                </h3>
+                <p style="margin-bottom: 1rem;">You need GitHub authentication to save intelligence entries.</p>
+                <button class="btn btn-primary" onclick="showTokenModal()">
+                    <i class="fas fa-key"></i> Add GitHub Token
+                </button>
+            </div>
+            
+            <form id="intelligenceForm" onsubmit="saveIntelligence(event)">
+                <div class="form-group">
+                    <label class="form-label">Intelligence Title</label>
+                    <input type="text" id="intelTitle" class="form-input" 
+                           placeholder="What was discovered?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Source Mission</label>
+                    <select id="sourceMission" class="form-select" required>
+                        <option value="">Select source mission...</option>
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Player Visibility</label>
+                    <div class="visibility-toggle">
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="playerVisible" checked>
+                            <span class="slider"></span>
                         </div>
-                    </div>
-                    <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
-                        Infiltrate Vermillion Invictus Group
-                    </div>
-                    <div class="timer-display">
-                        <i class="fas fa-hourglass-end"></i> MISSION COMPLETE - AWAITING RESOLUTION
-                    </div>
-                    <div class="asset-list">
-                        <span class="asset-tag">Marcus</span>
-                        <span class="asset-tag">Vera</span>
+                        <div>
+                            <div style="font-weight: 600; color: var(--text-primary);">
+                                <span id="visibilityText">Visible to Players</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Toggle to show/hide from player interface
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- More mission cards would be loaded here -->
-            </div>
+                <div class="form-group">
+                    <label class="form-label">Intelligence Content</label>
+                    <textarea id="intelContent" class="form-textarea" 
+                              placeholder="Enter the intelligence information here...
+
+You can format this however you want:
+• Bullet points
+• Paragraphs  
+• Lists
+• Whatever makes sense for the information
+
+This is what players will see (if visible is enabled)." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Private GM Notes (Optional)</label>
+                    <textarea id="gmNotes" class="form-textarea" style="min-height: 100px;"
+                              placeholder="Private notes that players will never see..."></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Save Intelligence
+                    </button>
+                    <button type="button" class="btn btn-blue" onclick="clearForm()">
+                        <i class="fas fa-file"></i> New Entry
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="deleteIntelligence()" id="deleteBtn" style="display: none;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </form>
         </div>
         
-        <!-- Mission Resolution Panel -->
-        <div class="resolution-panel" id="resolutionPanel">
-            <h2 class="panel-title"><i class="fas fa-clipboard-check"></i> Resolve Mission</h2>
+        <!-- Existing Intelligence List -->
+        <div class="panel">
+            <h2 class="panel-title"><i class="fas fa-database"></i> Existing Intelligence</h2>
             
-            <div class="resolution-grid">
-                <!-- Left Column: Success Level & Intelligence -->
-                <div>
-                    <h3 style="color: var(--accent-blue); margin-bottom: 1rem;">
-                        <i class="fas fa-target"></i> Mission Outcome
-                    </h3>
-                    
-                    <div class="success-selector">
-                        <div class="success-option" onclick="selectSuccess(this, 'failure')">
-                            <input type="radio" name="success" value="failure" class="success-radio">
-                            <div>
-                                <div style="font-weight: 600; color: var(--accent-red);">Total Failure (0-25)</div>
-                                <div style="font-size: 0.9rem; color: var(--text-muted);">Mission failed completely</div>
-                            </div>
-                        </div>
-                        
-                        <div class="success-option" onclick="selectSuccess(this, 'partial_1')">
-                            <input type="radio" name="success" value="partial_1" class="success-radio">
-                            <div>
-                                <div style="font-weight: 600; color: var(--accent-amber);">Partial Success 1 (26-40)</div>
-                                <div style="font-size: 0.9rem; color: var(--text-muted);">Minimal intelligence gathered</div>
-                            </div>
-                        </div>
-                        
-                        <div class="success-option" onclick="selectSuccess(this, 'partial_2')">
-                            <input type="radio" name="success" value="partial_2" class="success-radio">
-                            <div>
-                                <div style="font-weight: 600; color: var(--accent-amber);">Partial Success 2 (41-55)</div>
-                                <div style="font-size: 0.9rem; color: var(--text-muted);">Some useful intelligence</div>
-                            </div>
-                        </div>
-                        
-                        <div class="success-option" onclick="selectSuccess(this, 'partial_3')">
-                            <input type="radio" name="success" value="partial_3" class="success-radio">
-                            <div>
-                                <div style="font-weight: 600; color: var(--accent-amber);">Partial Success 3 (56-70)</div>
-                                <div style="font-size: 0.9rem; color: var(--text-muted);">Good intelligence gathered</div>
-                            </div>
-                        </div>
-                        
-                        <div class="success-option" onclick="selectSuccess(this, 'partial_4')">
-                            <input type="radio" name="success" value="partial_4" class="success-radio">
-                            <div>
-                                <div style="font-weight: 600; color: var(--accent-amber);">Partial Success 4 (71-85)</div>
-                                <div style="font-size: 0.9rem; color: var(--text-muted);">Excellent intelligence</div>
-                            </div>
-                        </div>
-                        
-                        <div class="success-option" onclick="selectSuccess(this, 'complete')">
-                            <input type="radio" name="success" value="complete" class="success-radio">
-                            <div>
-                                <div style="font-weight: 600; color: var(--accent-green);">Complete Success (86-100)</div>
-                                <div style="font-size: 0.9rem; color: var(--text-muted);">All objectives achieved</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Intelligence Gathered -->
-                    <div class="intelligence-form">
-                        <h4 style="color: var(--accent-amber); margin-bottom: 1rem;">
-                            <i class="fas fa-brain"></i> Intelligence Gathered
-                        </h4>
-                        
-                        <div id="intelligenceItems">
-                            <!-- Intelligence items will be added here -->
-                        </div>
-                        
-                        <button type="button" class="btn btn-blue" onclick="addIntelligenceItem()">
-                            <i class="fas fa-plus"></i> Add Intelligence
-                        </button>
-                    </div>
+            <div class="intel-list" id="intelligenceList">
+                <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                    <i class="fas fa-satellite-dish fa-spin fa-2x"></i>
+                    <p style="margin-top: 1rem;">Loading intelligence entries...</p>
                 </div>
-                
-                <!-- Right Column: Details & Notes -->
-                <div>
-                    <h3 style="color: var(--accent-green); margin-bottom: 1rem;">
-                        <i class="fas fa-scroll"></i> Resolution Details
-                    </h3>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Actual Difficulty (1-10)</label>
-                        <input type="number" class="form-input" min="1" max="10" value="5" id="actualDifficulty">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Story Notes</label>
-                        <textarea class="form-textarea" id="storyNotes" placeholder="Describe what happened during the mission..."></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Complications</label>
-                        <textarea class="form-textarea" id="complications" placeholder="Any complications that arose..."></textarea>
-                    </div>
-                    
-                    <div class="follow-up-section">
-                        <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">
-                            <i class="fas fa-arrow-right"></i> Follow-up Actions
-                        </h4>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Asset Status Changes</label>
-                            <select class="form-select" id="assetChanges">
-                                <option value="">No changes</option>
-                                <option value="injured">Asset(s) injured</option>
-                                <option value="captured">Asset(s) captured</option>
-                                <option value="promoted">Asset(s) gained experience</option>
-                                <option value="compromised">Asset(s) identity compromised</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Faction Relations</label>
-                            <input type="text" class="form-input" id="factionChanges" placeholder="Chicago PD: +1, Winter Court: -2">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Follow-up Missions</label>
-                            <textarea class="form-textarea" id="followUpMissions" placeholder="Ideas for missions this intelligence might unlock..."></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Resolution Preview -->
-            <div class="intel-preview" id="resolutionPreview" style="display: none;">
-                <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">
-                    <i class="fas fa-eye"></i> Resolution Summary
-                </h4>
-                <div id="previewContent"></div>
-            </div>
-            
-            <!-- Action Buttons -->
-            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                <button class="btn btn-blue" onclick="previewResolution()">
-                    <i class="fas fa-eye"></i> Preview Resolution
-                </button>
-                <button class="btn btn-success" onclick="resolveMission()">
-                    <i class="fas fa-check"></i> Resolve Mission
-                </button>
-                <button class="btn btn-primary" onclick="resetForm()">
-                    <i class="fas fa-undo"></i> Reset Form
-                </button>
             </div>
         </div>
     </div>
     
+    <!-- Load dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="js/data-loader.js"></script>
+    
     <script>
-        let selectedMissionId = null;
-        let intelligenceCounter = 0;
+        let currentEditingId = null;
+        let existingIntelligence = [];
         
-        function selectMission(element, missionId) {
-            // Remove selection from other cards
-            document.querySelectorAll('.mission-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            
-            // Select this card
-            element.classList.add('selected');
-            selectedMissionId = missionId;
-            
-            // Show resolution panel
-            document.getElementById('resolutionPanel').classList.add('active');
-            
-            // Scroll to resolution panel
-            document.getElementById('resolutionPanel').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        function selectSuccess(element, level) {
-            // Remove selection from other options
-            document.querySelectorAll('.success-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            // Select this option
-            element.classList.add('selected');
-            element.querySelector('input[type="radio"]').checked = true;
-            
-            // Update intelligence preview
-            updateIntelligencePreview(level);
-        }
-        
-        function updateIntelligencePreview(level) {
-            // This would load the predefined intelligence for this success level
-            // For now, just update the UI to show what would be unlocked
-            console.log('Success level selected:', level);
-        }
-        
-        function addIntelligenceItem() {
-            intelligenceCounter++;
-            const container = document.getElementById('intelligenceItems');
-            
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'intel-item';
-            itemDiv.innerHTML = `
-                <div class="form-group">
-                    <label class="form-label">Intelligence Title</label>
-                    <input type="text" class="form-input" placeholder="What was discovered?" name="intel_title_${intelligenceCounter}">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-textarea" placeholder="Detailed description of the intelligence..." name="intel_desc_${intelligenceCounter}"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Tags (comma separated)</label>
-                    <input type="text" class="form-input" placeholder="surveillance, financial, contacts" name="intel_tags_${intelligenceCounter}">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Reliability</label>
-                    <select class="form-select" name="intel_reliability_${intelligenceCounter}">
-                        <option value="HIGH">High</option>
-                        <option value="MEDIUM">Medium</option>
-                        <option value="LOW">Low</option>
-                        <option value="UNVERIFIED">Unverified</option>
-                    </select>
-                </div>
-                <button type="button" onclick="removeIntelligenceItem(this)" style="background: var(--accent-red); color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">
-                    <i class="fas fa-trash"></i> Remove
-                </button>
-            `;
-            
-            container.appendChild(itemDiv);
-        }
-        
-        function removeIntelligenceItem(button) {
-            button.closest('.intel-item').remove();
-        }
-        
-        function previewResolution() {
-            const preview = document.getElementById('resolutionPreview');
-            const content = document.getElementById('previewContent');
-            
-            // Gather form data
-            const successLevel = document.querySelector('input[name="success"]:checked')?.value;
-            const difficulty = document.getElementById('actualDifficulty').value;
-            const storyNotes = document.getElementById('storyNotes').value;
-            const complications = document.getElementById('complications').value;
-            
-            // Generate preview
-            let previewHTML = `
-                <div><strong>Success Level:</strong> ${successLevel || 'Not selected'}</div>
-                <div><strong>Actual Difficulty:</strong> ${difficulty}/10</div>
-                ${storyNotes ? `<div><strong>Story:</strong> ${storyNotes}</div>` : ''}
-                ${complications ? `<div><strong>Complications:</strong> ${complications}</div>` : ''}
-            `;
-            
-            // Add intelligence items
-            const intelItems = document.querySelectorAll('.intel-item');
-            if (intelItems.length > 0) {
-                previewHTML += '<div><strong>Intelligence Gathered:</strong><ul>';
-                intelItems.forEach(item => {
-                    const title = item.querySelector('[name^="intel_title"]').value;
-                    if (title) {
-                        previewHTML += `<li>${title}</li>`;
-                    }
-                });
-                previewHTML += '</ul></div>';
-            }
-            
-            content.innerHTML = previewHTML;
-            preview.style.display = 'block';
-        }
-        
-        function resolveMission() {
-            if (!selectedMissionId) {
-                alert('Please select a mission first');
-                return;
-            }
-            
-            const successLevel = document.querySelector('input[name="success"]:checked')?.value;
-            if (!successLevel) {
-                alert('Please select a success level');
-                return;
-            }
-            
-            // Gather all form data
-            const resolutionData = {
-                missionId: selectedMissionId,
-                successLevel: successLevel,
-                actualDifficulty: document.getElementById('actualDifficulty').value,
-                storyNotes: document.getElementById('storyNotes').value,
-                complications: document.getElementById('complications').value,
-                assetChanges: document.getElementById('assetChanges').value,
-                factionChanges: document.getElementById('factionChanges').value,
-                followUpMissions: document.getElementById('followUpMissions').value,
-                intelligence: []
-            };
-            
-            // Gather intelligence items
-            document.querySelectorAll('.intel-item').forEach((item, index) => {
-                const title = item.querySelector('[name^="intel_title"]').value;
-                const description = item.querySelector('[name^="intel_desc"]').value;
-                const tags = item.querySelector('[name^="intel_tags"]').value;
-                const reliability = item.querySelector('[name^="intel_reliability"]').value;
-                
-                if (title) {
-                    resolutionData.intelligence.push({
-                        title,
-                        description,
-                        tags: tags.split(',').map(tag => tag.trim()),
-                        reliability,
-                        gathered_date: new Date().toISOString().split('T')[0]
-                    });
-                }
-            });
-            
-            // This would send the data to your GitHub API
-            console.log('Resolution data:', resolutionData);
-            
-            // For demo purposes, just show success
-            alert(`Mission ${selectedMissionId} resolved with ${successLevel} success level!`);
-            
-            // In real implementation, this would:
-            // 1. Update the mission YAML file with results
-            // 2. Create intelligence files if needed
-            // 3. Update asset statuses
-            // 4. Update faction standings
-            // 5. Refresh the mission list
-            
-            resetForm();
-        }
-        
-        function resetForm() {
-            // Clear all form inputs
-            document.querySelectorAll('input, textarea, select').forEach(input => {
-                if (input.type === 'radio') {
-                    input.checked = false;
-                } else {
-                    input.value = '';
-                }
-            });
-            
-            // Clear intelligence items
-            document.getElementById('intelligenceItems').innerHTML = '';
-            
-            // Hide preview
-            document.getElementById('resolutionPreview').style.display = 'none';
-            
-            // Clear success selection
-            document.querySelectorAll('.success-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            // Reset difficulty to default
-            document.getElementById('actualDifficulty').value = '5';
-            
-            intelligenceCounter = 0;
-        }
-        
-        // Load active missions on page load
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // This would load actual active missions from your data
-            console.log('Loading active missions...');
+            initializeIntelligenceManager();
+            updateAuthStatus();
         });
+        
+        async function initializeIntelligenceManager() {
+            try {
+                // Load missions for dropdown
+                await loadMissionsDropdown();
+                
+                // Load existing intelligence
+                await loadExistingIntelligence();
+                
+                // Setup visibility toggle listener
+                document.getElementById('playerVisible').addEventListener('change', updateVisibilityText);
+                updateVisibilityText();
+                
+            } catch (error) {
+                console.error('Failed to initialize intelligence manager:', error);
+                showNotification('Failed to load data', 'error');
+            }
+        }
+        
+        function updateAuthStatus() {
+            const authWarning = document.getElementById('authWarning');
+            
+            if (intelligenceAPI && intelligenceAPI.canWrite()) {
+                authWarning.style.display = 'none';
+            } else {
+                authWarning.style.display = 'block';
+            }
+        }
+        
+        async function loadMissionsDropdown() {
+            try {
+                const operations = await intelligenceAPI.loadOperations();
+                const select = document.getElementById('sourceMission');
+                
+                // Clear existing options except the first one
+                select.innerHTML = '<option value="">Select source mission...</option>';
+                
+                operations.forEach(operation => {
+                    const option = document.createElement('option');
+                    option.value = operation.operation_id;
+                    option.textContent = `${operation.codename} (${operation.operation_id})`;
+                    select.appendChild(option);
+                });
+                
+                console.log(`Loaded ${operations.length} missions for dropdown`);
+                
+            } catch (error) {
+                console.error('Failed to load missions:', error);
+                showNotification('Failed to load missions', 'error');
+            }
+        }
+        
+        async function loadExistingIntelligence() {
+            try {
+                // Check if intelligence directory exists
+                const intelFiles = await intelligenceAPI.listDirectory('data/intelligence');
+                
+                const container = document.getElementById('intelligenceList');
+                container.innerHTML = '';
+                
+                if (intelFiles.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                            <i class="fas fa-brain fa-2x"></i>
+                            <p style="margin-top: 1rem;">No intelligence entries yet</p>
+                            <p style="font-size: 0.9rem;">Create your first intelligence entry above</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                existingIntelligence = [];
+                
+                for (const file of intelFiles) {
+                    try {
+                        const { content } = await intelligenceAPI.fetchFile(file.path);
+                        const intelData = intelligenceAPI.parseYAML(content);
+                        intelData._filename = file.name;
+                        intelData._filepath = file.path;
+                        existingIntelligence.push(intelData);
+                        
+                        const item = createIntelligenceListItem(intelData);
+                        container.appendChild(item);
+                        
+                    } catch (error) {
+                        console.error(`Failed to load intelligence ${file.name}:`, error);
+                    }
+                }
+                
+                console.log(`Loaded ${existingIntelligence.length} intelligence entries`);
+                
+            } catch (error) {
+                console.error('Failed to load existing intelligence:', error);
+                const container = document.getElementById('intelligenceList');
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--accent-red); padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        <p style="margin-top: 1rem;">Failed to load intelligence</p>
+                        <p style="font-size: 0.9rem;">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function createIntelligenceListItem(intel) {
+            const item = document.createElement('div');
+            item.className = 'intel-item';
+            item.onclick = () => editIntelligence(intel);
+            
+            const preview = intel.content ? intel.content.substring(0, 100) + '...' : 'No content';
+            const isVisible = intel.visibility?.player_visible !== false;
+            
+            item.innerHTML = `
+                <div class="intel-header">
+                    <div class="intel-title">${intel.title || 'Untitled Intelligence'}</div>
+                    <div class="visibility-badge ${isVisible ? 'visible' : 'hidden'}">
+                        ${isVisible ? 'VISIBLE' : 'HIDDEN'}
+                    </div>
+                </div>
+                <div class="intel-meta">
+                    <i class="fas fa-calendar"></i> ${intel.created_date || 'No date'}
+                    <span style="margin-left: 1rem;"><i class="fas fa-crosshairs"></i> ${intel.source_mission || 'No mission'}</span>
+                </div>
+                <div class="intel-preview">${preview}</div>
+            `;
+            
+            return item;
+        }
+        
+        function editIntelligence(intel) {
+            // Clear previous selections
+            document.querySelectorAll('.intel-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Select this item
+            event.target.closest('.intel-item').classList.add('selected');
+            
+            // Populate form
+            currentEditingId = intel.intelligence_id;
+            document.getElementById('intelTitle').value = intel.title || '';
+            document.getElementById('sourceMission').value = intel.source_mission || '';
+            document.getElementById('playerVisible').checked = intel.visibility?.player_visible !== false;
+            document.getElementById('intelContent').value = intel.content || '';
+            document.getElementById('gmNotes').value = intel.notes || '';
+            
+            updateVisibilityText();
+            
+            // Show delete button
+            document.getElementById('deleteBtn').style.display = 'block';
+        }
+        
+        function updateVisibilityText() {
+            const checkbox = document.getElementById('playerVisible');
+            const text = document.getElementById('visibilityText');
+            
+            if (checkbox.checked) {
+                text.textContent = 'Visible to Players';
+                text.style.color = 'var(--accent-green)';
+            } else {
+                text.textContent = 'Hidden from Players';
+                text.style.color = 'var(--accent-red)';
+            }
+        }
+        
+        async function saveIntelligence(event) {
+            event.preventDefault();
+            
+            if (!intelligenceAPI || !intelligenceAPI.canWrite()) {
+                showNotification('GitHub authentication required', 'error');
+                return;
+            }
+            
+            try {
+                const title = document.getElementById('intelTitle').value.trim();
+                const sourceMission = document.getElementById('sourceMission').value;
+                const playerVisible = document.getElementById('playerVisible').checked;
+                const content = document.getElementById('intelContent').value.trim();
+                const gmNotes = document.getElementById('gmNotes').value.trim();
+                
+                if (!title || !sourceMission || !content) {
+                    showNotification('Please fill in all required fields', 'warning');
+                    return;
+                }
+                
+                // Generate intelligence ID if new
+                const intelId = currentEditingId || `INTEL-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
+                
+                // Create intelligence data
+                const intelligenceData = {
+                    intelligence_id: intelId,
+                    title: title,
+                    source_mission: sourceMission,
+                    created_date: new Date().toISOString().split('T')[0],
+                    created_by: 'Handler-Prime',
+                    
+                    visibility: {
+                        player_visible: playerVisible,
+                        classification: 'CLASSIFIED'
+                    },
+                    
+                    content: content,
+                    
+                    metadata: {
+                        filename: `intel_${intelId.toLowerCase().replace(/[^a-z0-9]/g, '_')}.yml`,
+                        last_updated: new Date().toISOString()
+                    },
+                    
+                    tags: [],
+                    notes: gmNotes
+                };
+                
+                // Generate filename
+                const filename = `intel_${intelId.toLowerCase().replace(/[^a-z0-9]/g, '_')}.yml`;
+                const filePath = `data/intelligence/${filename}`;
+                
+                // Convert to YAML
+                const yamlContent = jsyaml.dump(intelligenceData, { indent: 2 });
+                
+                // Get SHA if editing existing file
+                let sha = null;
+                if (currentEditingId) {
+                    try {
+                        const { sha: existingSha } = await intelligenceAPI.fetchFile(filePath);
+                        sha = existingSha;
+                    } catch (error) {
+                        // File doesn't exist, create new
+                    }
+                }
+                
+                // Save to GitHub
+                showNotification('Saving intelligence...', 'warning');
+                await intelligenceAPI.writeFile(
+                    filePath,
+                    yamlContent,
+                    currentEditingId ? `Update intelligence: ${title}` : `Create intelligence: ${title}`,
+                    sha
+                );
+                
+                showNotification(`Intelligence "${title}" saved successfully!`, 'success');
+                
+                // Reload intelligence list
+                await loadExistingIntelligence();
+                
+                // Clear form if it was a new entry
+                if (!currentEditingId) {
+                    clearForm();
+                }
+                
+            } catch (error) {
+                console.error('Failed to save intelligence:', error);
+                showNotification(`Failed to save intelligence: ${error.message}`, 'error');
+            }
+        }
+        
+        async function deleteIntelligence() {
+            if (!currentEditingId) return;
+            
+            const title = document.getElementById('intelTitle').value;
+            if (!confirm(`Are you sure you want to delete "${title}"?\n\nThis action cannot be undone.`)) {
+                return;
+            }
+            
+            try {
+                // For now, just show a message since GitHub API doesn't have delete
+                // In a real implementation, you'd need to use GitHub API to delete the file
+                showNotification('Delete functionality requires GitHub API enhancement', 'warning');
+                
+                // TODO: Implement actual file deletion when GitHub delete API is added
+                
+            } catch (error) {
+                console.error('Failed to delete intelligence:', error);
+                showNotification(`Failed to delete intelligence: ${error.message}`, 'error');
+            }
+        }
+        
+        function clearForm() {
+            currentEditingId = null;
+            document.getElementById('intelligenceForm').reset();
+            document.getElementById('playerVisible').checked = true;
+            updateVisibilityText();
+            document.getElementById('deleteBtn').style.display = 'none';
+            
+            // Clear selections
+            document.querySelectorAll('.intel-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+        }
+        
+        function showTokenModal() {
+            const token = prompt('Enter your GitHub Personal Access Token:\n\n(Create one at GitHub Settings > Developer settings > Personal access tokens)\nNeeds "repo" scope for write access.');
+            if (token) {
+                intelligenceAPI.setGitHubToken(token);
+                updateAuthStatus();
+                showNotification('GitHub token saved successfully!', 'success');
+            }
+        }
+        
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'exclamation-triangle'}"></i> ${message}`;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
     </script>
 </body>
 </html>
