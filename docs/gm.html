@@ -507,7 +507,7 @@
             text-align: center;
         }
         
-        /* Asset Editor Specific Styles */
+        /* Asset/Mission Editor Specific Styles */
         .asset-editor-modal {
             display: none;
             position: fixed;
@@ -593,6 +593,22 @@
             border-radius: 4px;
             font-size: 0.8rem;
             font-weight: 600;
+        }
+        
+        /* Mission Editor Specific Styles */
+        .mission-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-amber);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .risk-bar {
+            width: 4px;
+            height: 16px;
+            border-radius: 2px;
         }
         
         @media (max-width: 1200px) {
@@ -688,7 +704,7 @@
                         <div class="quick-action-desc">Recruit a new intelligence operative</div>
                     </div>
                     
-                    <div class="quick-action-card" onclick="checkAuthAndRun(() => openModal('missionModal'))">
+                    <div class="quick-action-card" onclick="checkAuthAndRun(() => editMission('new'))">
                         <div class="quick-action-title">Create New Mission</div>
                         <div class="quick-action-desc">Plan a new intelligence operation</div>
                     </div>
@@ -761,7 +777,7 @@
             <div class="panel">
                 <div class="panel-header">
                     <h2 class="panel-title"><i class="fas fa-crosshairs"></i> Mission Management</h2>
-                    <button class="btn btn-primary" onclick="checkAuthAndRun(() => openModal('missionModal'))">
+                    <button class="btn btn-primary" onclick="checkAuthAndRun(() => editMission('new'))">
                         <i class="fas fa-plus"></i> Create Mission
                     </button>
                 </div>
@@ -1189,6 +1205,272 @@
             </div>
         </div>
     </div>
+
+    <!-- Mission Editor Modal -->
+    <div class="asset-editor-modal" id="missionEditorModal">
+        <div class="asset-editor-content" style="border-color: var(--accent-amber);">
+            <div class="modal-header">
+                <h3 class="modal-title" style="color: var(--accent-amber);">
+                    <i class="fas fa-crosshairs"></i> Mission Editor
+                </h3>
+                <button class="close-btn" onclick="closeMissionEditor()">&times;</button>
+            </div>
+            
+            <!-- Mission Preview -->
+            <div class="panel" style="margin-bottom: 1.5rem;">
+                <h4 style="color: var(--accent-green); margin-bottom: 1rem;">Live Preview</h4>
+                <div id="missionPreviewCard">
+                    <!-- Preview will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <form id="missionEditorForm">
+                <div class="editor-grid">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-amber); margin-bottom: 1rem;">Mission Basics</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Mission Codename</label>
+                                <input type="text" id="missionCodename" class="form-input" placeholder="OPERATION NIGHTFALL" onchange="updateMissionPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Classification</label>
+                                <select id="missionClassification" class="form-select" onchange="updateMissionPreview()">
+                                    <option value="CLASSIFIED">CLASSIFIED</option>
+                                    <option value="SECRET">SECRET</option>
+                                    <option value="TOP SECRET">TOP SECRET</option>
+                                    <option value="EYES ONLY">EYES ONLY</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Priority Level</label>
+                                <select id="missionPriority" class="form-select" onchange="updateMissionPreview()">
+                                    <option value="LOW">LOW</option>
+                                    <option value="MEDIUM" selected>MEDIUM</option>
+                                    <option value="HIGH">HIGH</option>
+                                    <option value="CRITICAL">CRITICAL</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Primary Objective</label>
+                                <textarea id="missionObjective" class="form-textarea" rows="3" placeholder="Infiltrate target location and gather intelligence on..." onchange="updateMissionPreview()"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Mission Status</label>
+                                <select id="missionStatus" class="form-select" onchange="updateMissionPreview()">
+                                    <option value="PLANNING">PLANNING (Hidden from players)</option>
+                                    <option value="ACTIVE">ACTIVE (Visible to players)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Target Information -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-amber); margin-bottom: 1rem;">Target Information</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Target Location/Organization</label>
+                                <input type="text" id="missionTarget" class="form-input" placeholder="Chicago Outfit Headquarters" onchange="updateMissionPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Target Realm/Area</label>
+                                <select id="missionRealm" class="form-select" onchange="updateMissionPreview()">
+                                    <option value="Mortal Coil">Mortal Coil</option>
+                                    <option value="Winter Court">Winter Court - Never Never</option>
+                                    <option value="Summer Court">Summer Court - Never Never</option>
+                                    <option value="Hell">Hell</option>
+                                    <option value="Abyss">Abyss</option>
+                                    <option value="Other">Other/Custom</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Mission Difficulty (1-10): <span id="difficultyDisplay">5</span></label>
+                                <input type="range" id="missionDifficulty" min="1" max="10" value="5" oninput="updateDifficultyDisplay()" onchange="updateMissionPreview()">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+                                    <span>Trivial</span>
+                                    <span>Moderate</span>
+                                    <span>Extreme</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Time Sensitivity</label>
+                                <select id="missionTimeSensitivity" class="form-select" onchange="updateMissionPreview()">
+                                    <option value="LOW">LOW - No deadline pressure</option>
+                                    <option value="MEDIUM" selected>MEDIUM - Some urgency</option>
+                                    <option value="HIGH">HIGH - Time critical</option>
+                                    <option value="URGENT">URGENT - Immediate action required</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Timeline -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-amber); margin-bottom: 1rem;">Timeline</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Estimated Duration (Hours)</label>
+                                <input type="number" id="missionDuration" class="form-input" value="72" min="1" max="720" onchange="updateMissionPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Deployment Window Start</label>
+                                <input type="datetime-local" id="missionWindowStart" class="form-input" onchange="updateMissionPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Deployment Window End</label>
+                                <input type="datetime-local" id="missionWindowEnd" class="form-input" onchange="updateMissionPreview()">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div>
+                        <!-- Requirements -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Mission Requirements</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Minimum Assets Required</label>
+                                <input type="number" id="missionMinAssets" class="form-input" value="1" min="1" max="10" onchange="updateMissionPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Required Stats (Minimum Total)</label>
+                                <div class="stats-grid">
+                                    <div class="stat-input">
+                                        <div class="stat-value" id="reqSkillValue">0</div>
+                                        <input type="range" class="stat-slider" id="reqSkill" min="0" max="30" value="0" oninput="updateReqStatDisplay('skill')" onchange="updateMissionPreview()">
+                                        <label class="form-label" style="text-align: center;">Skill</label>
+                                    </div>
+                                    
+                                    <div class="stat-input">
+                                        <div class="stat-value" id="reqStealthValue">0</div>
+                                        <input type="range" class="stat-slider" id="reqStealth" min="0" max="30" value="0" oninput="updateReqStatDisplay('stealth')" onchange="updateMissionPreview()">
+                                        <label class="form-label" style="text-align: center;">Stealth</label>
+                                    </div>
+                                    
+                                    <div class="stat-input">
+                                        <div class="stat-value" id="reqCombatValue">0</div>
+                                        <input type="range" class="stat-slider" id="reqCombat" min="0" max="30" value="0" oninput="updateReqStatDisplay('combat')" onchange="updateMissionPreview()">
+                                        <label class="form-label" style="text-align: center;">Combat</label>
+                                    </div>
+                                    
+                                    <div class="stat-input">
+                                        <div class="stat-value" id="reqTechValue">0</div>
+                                        <input type="range" class="stat-slider" id="reqTech" min="0" max="30" value="0" oninput="updateReqStatDisplay('tech')" onchange="updateMissionPreview()">
+                                        <label class="form-label" style="text-align: center;">Tech</label>
+                                    </div>
+                                    
+                                    <div class="stat-input">
+                                        <div class="stat-value" id="reqSocialValue">0</div>
+                                        <input type="range" class="stat-slider" id="reqSocial" min="0" max="30" value="0" oninput="updateReqStatDisplay('social')" onchange="updateMissionPreview()">
+                                        <label class="form-label" style="text-align: center;">Social</label>
+                                    </div>
+                                    
+                                    <div class="stat-input">
+                                        <div class="stat-value" id="reqWillValue">0</div>
+                                        <input type="range" class="stat-slider" id="reqWill" min="0" max="30" value="0" oninput="updateReqStatDisplay('will')" onchange="updateMissionPreview()">
+                                        <label class="form-label" style="text-align: center;">Will</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Required Specializations</label>
+                                <input type="text" id="missionNewSpecialization" class="form-input" placeholder="Add required specialization (e.g., 'Hacker', 'Linguist')" onkeypress="if(event.key==='Enter'){event.preventDefault();addMissionSpecialization();}">
+                                <button type="button" class="btn btn-secondary" onclick="addMissionSpecialization()" style="margin-top: 0.5rem; width: 100%;">
+                                    <i class="fas fa-plus"></i> Add Required Specialization
+                                </button>
+                                <div id="missionSpecializationsList">
+                                    <!-- Specializations will be added here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Risks & Consequences -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-red); margin-bottom: 1rem;">Risks & Consequences</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Risk Level</label>
+                                <select id="missionRiskLevel" class="form-select" onchange="updateMissionPreview()">
+                                    <option value="LOW">LOW - Minimal danger</option>
+                                    <option value="MEDIUM" selected>MEDIUM - Moderate risk</option>
+                                    <option value="HIGH">HIGH - Significant danger</option>
+                                    <option value="EXTREME">EXTREME - Life threatening</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Failure Consequences</label>
+                                <textarea id="missionFailureConsequence" class="form-textarea" rows="2" placeholder="What happens if the mission fails..." onchange="updateMissionPreview()"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Partial Success Result</label>
+                                <textarea id="missionPartialConsequence" class="form-textarea" rows="2" placeholder="What happens with partial success..." onchange="updateMissionPreview()"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Complete Success Result</label>
+                                <textarea id="missionSuccessConsequence" class="form-textarea" rows="2" placeholder="What happens with complete success..." onchange="updateMissionPreview()"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Intelligence Rewards -->
+                        <div class="form-section">
+                            <h4 style="color: var(--accent-blue); margin-bottom: 1rem;">Intelligence Rewards</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Partial Success Intelligence</label>
+                                <input type="text" id="missionPartialIntel" class="form-input" placeholder="Basic surveillance data, contact information..." onchange="updateMissionPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Complete Success Intelligence</label>
+                                <input type="text" id="missionCompleteIntel" class="form-input" placeholder="Detailed operational plans, strategic information..." onchange="updateMissionPreview()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Risk Factors</label>
+                                <input type="text" id="missionNewRiskFactor" class="form-input" placeholder="Add risk factor (e.g., 'Heavy security', 'Supernatural defenses')" onkeypress="if(event.key==='Enter'){event.preventDefault();addRiskFactor();}">
+                                <button type="button" class="btn btn-secondary" onclick="addRiskFactor()" style="margin-top: 0.5rem; width: 100%;">
+                                    <i class="fas fa-plus"></i> Add Risk Factor
+                                </button>
+                                <div id="missionRiskFactorsList">
+                                    <!-- Risk factors will be added here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: center;">
+                <button class="btn btn-success" onclick="saveMissionFromEditor()">
+                    <i class="fas fa-save"></i> Save Mission
+                </button>
+                <button class="btn btn-secondary" onclick="closeMissionEditor()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn btn-danger" onclick="deleteCurrentMission()" style="display: none;" id="deleteMissionBtn">
+                    <i class="fas fa-trash"></i> Delete Mission
+                </button>
+            </div>
+        </div>
+    </div>
     
     <!-- Load dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
@@ -1199,6 +1481,11 @@
         let currentEditingAsset = null;
         let assetSpecializations = [];
         let assetEquipment = [];
+        
+        // Mission Editor Variables
+        let currentEditingMission = null;
+        let missionSpecializations = [];
+        let missionRiskFactors = [];
         
         // Password check on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -1416,30 +1703,62 @@
                 const operations = await intelligenceAPI.loadOperations();
                 const container = document.getElementById('missionManagementList');
                 
+                // Add "Create New Mission" button at the top
+                container.innerHTML = `
+                    <div class="list-item" onclick="editMission('new')" style="border: 2px dashed var(--accent-amber); background: rgba(255, 165, 0, 0.1); cursor: pointer;">
+                        <div>
+                            <div class="item-name" style="color: var(--accent-amber);">
+                                <i class="fas fa-plus"></i> Create New Mission
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Plan a new intelligence operation
+                            </div>
+                        </div>
+                        <div class="item-status" style="background: var(--accent-amber); color: var(--primary-bg);">NEW</div>
+                    </div>
+                `;
+                
                 if (operations.length === 0) {
-                    container.innerHTML = `
+                    container.innerHTML += `
                         <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                            <i class="fas fa-crosshairs"></i>
-                            <p style="margin-top: 0.5rem;">No missions created yet</p>
+                            <i class="fas fa-crosshairs fa-2x"></i>
+                            <p style="margin-top: 1rem;">No missions created yet</p>
                         </div>
                     `;
                     return;
                 }
                 
-                container.innerHTML = operations.map(mission => `
-                    <div class="list-item" onclick="editMission('${mission.operation_id}')">
-                        <div>
-                            <div class="item-name">${mission.codename}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">
-                                ${mission.target?.location?.realm || 'Unknown target'} - ${mission.risks?.level || 'MEDIUM'} risk
+                // Add existing missions
+                operations.forEach(mission => {
+                    const missionElement = document.createElement('div');
+                    missionElement.innerHTML = `
+                        <div class="list-item" onclick="editMission('${mission.operation_id}')">
+                            <div>
+                                <div class="item-name">${mission.codename}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                    ${mission.objective?.primary?.substring(0, 50) || 'Classified'}${mission.objective?.primary?.length > 50 ? '...' : ''}
+                                </div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                    <i class="fas fa-exclamation-triangle"></i> ${mission.risks?.level || 'MEDIUM'} Risk
+                                    <span style="margin-left: 1rem;"><i class="fas fa-clock"></i> ${mission.timeline?.estimated_duration_hours || 24}h</span>
+                                </div>
                             </div>
+                            <div class="item-status status-${mission.deployment?.status?.toLowerCase() || 'planning'}">${mission.deployment?.status || 'PLANNING'}</div>
                         </div>
-                        <div class="item-status status-${mission.deployment?.status?.toLowerCase() || 'planning'}">${mission.deployment?.status || 'PLANNING'}</div>
-                    </div>
-                `).join('');
+                    `;
+                    container.appendChild(missionElement.firstElementChild);
+                });
                 
             } catch (error) {
                 console.error('Failed to load mission management:', error);
+                const container = document.getElementById('missionManagementList');
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--accent-red); padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        <p style="margin-top: 1rem;">Failed to load missions</p>
+                        <p style="font-size: 0.9rem;">${error.message}</p>
+                    </div>
+                `;
             }
         }
         
@@ -1681,7 +2000,7 @@
                             </div>
                             <div class="asset-location" style="font-size: 0.9rem; color: var(--text-secondary);">
                                 <i class="fas fa-dollar-sign"></i> 
-                                $${parseInt(salary || 0).toLocaleString()}/month
+                                ${parseInt(salary || 0).toLocaleString()}/month
                             </div>
                         </div>
                         <div class="asset-status status-available" style="padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; background: rgba(0, 255, 136, 0.2); color: var(--success); border: 1px solid var(--success);">AVAILABLE</div>
@@ -1774,6 +2093,380 @@
             currentEditingAsset = null;
         }
         
+        // Mission Editor Functions
+        function editMission(missionId) {
+            if (missionId && missionId !== 'new') {
+                // Load existing mission
+                intelligenceAPI.loadOperations().then(operations => {
+                    const mission = operations.find(m => m.operation_id === missionId);
+                    if (mission) {
+                        loadMissionIntoEditor(mission);
+                        currentEditingMission = mission;
+                    }
+                });
+            } else {
+                // Create new mission
+                clearMissionEditor();
+                currentEditingMission = null;
+            }
+            
+            document.getElementById('missionEditorModal').classList.add('active');
+        }
+        
+        function loadMissionIntoEditor(mission) {
+            document.getElementById('missionCodename').value = mission.codename || '';
+            document.getElementById('missionClassification').value = mission.classification || 'CLASSIFIED';
+            document.getElementById('missionPriority').value = mission.priority || 'MEDIUM';
+            document.getElementById('missionObjective').value = mission.objective?.primary || '';
+            document.getElementById('missionStatus').value = mission.deployment?.status || 'PLANNING';
+            
+            // Target information
+            document.getElementById('missionTarget').value = mission.target?.location?.realm || '';
+            document.getElementById('missionRealm').value = mission.target?.location?.realm || 'Mortal Coil';
+            document.getElementById('missionDifficulty').value = mission.target?.difficulty || 5;
+            document.getElementById('missionTimeSensitivity').value = mission.target?.time_sensitivity || 'MEDIUM';
+            
+            // Timeline
+            document.getElementById('missionDuration').value = mission.timeline?.estimated_duration_hours || 72;
+            if (mission.timeline?.deployment_window_start) {
+                document.getElementById('missionWindowStart').value = new Date(mission.timeline.deployment_window_start).toISOString().slice(0, 16);
+            }
+            if (mission.timeline?.deployment_window_end) {
+                document.getElementById('missionWindowEnd').value = new Date(mission.timeline.deployment_window_end).toISOString().slice(0, 16);
+            }
+            
+            // Requirements
+            document.getElementById('missionMinAssets').value = mission.requirements?.minimum_agents || 1;
+            
+            // Required stats
+            const reqStats = mission.requirements?.required_stats || {};
+            ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].forEach(stat => {
+                const value = reqStats[stat] || 0;
+                document.getElementById(`req${stat.charAt(0).toUpperCase() + stat.slice(1)}`).value = value;
+                updateReqStatDisplay(stat);
+            });
+            
+            // Risks
+            document.getElementById('missionRiskLevel').value = mission.risks?.level || 'MEDIUM';
+            document.getElementById('missionFailureConsequence').value = mission.risks?.consequences?.failure || '';
+            document.getElementById('missionPartialConsequence').value = mission.risks?.consequences?.partial_success || '';
+            document.getElementById('missionSuccessConsequence').value = mission.risks?.consequences?.success || '';
+            
+            // Intelligence rewards
+            document.getElementById('missionPartialIntel').value = mission.intelligence_rewards?.partial_1?.[0] || '';
+            document.getElementById('missionCompleteIntel').value = mission.intelligence_rewards?.complete_success?.[0] || '';
+            
+            // Load specializations and risk factors
+            missionSpecializations = mission.requirements?.required_specializations || [];
+            missionRiskFactors = mission.risks?.factors || [];
+            
+            updateDifficultyDisplay();
+            renderMissionSpecializations();
+            renderMissionRiskFactors();
+            updateMissionPreview();
+        }
+        
+        function clearMissionEditor() {
+            document.getElementById('missionEditorForm').reset();
+            missionSpecializations = [];
+            missionRiskFactors = [];
+            
+            // Reset required stats to 0
+            ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].forEach(stat => {
+                document.getElementById(`req${stat.charAt(0).toUpperCase() + stat.slice(1)}`).value = 0;
+                updateReqStatDisplay(stat);
+            });
+            
+            // Set default dates
+            const now = new Date();
+            const weekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            document.getElementById('missionWindowStart').value = now.toISOString().slice(0, 16);
+            document.getElementById('missionWindowEnd').value = weekFromNow.toISOString().slice(0, 16);
+            
+            updateDifficultyDisplay();
+            renderMissionSpecializations();
+            renderMissionRiskFactors();
+            updateMissionPreview();
+        }
+        
+        function updateDifficultyDisplay() {
+            const slider = document.getElementById('missionDifficulty');
+            const display = document.getElementById('difficultyDisplay');
+            
+            display.textContent = slider.value;
+            
+            // Update color based on difficulty
+            const value = parseInt(slider.value);
+            let color;
+            if (value <= 3) color = '#00ff88';
+            else if (value <= 6) color = '#ffa500';
+            else color = '#ff3366';
+            
+            display.style.color = color;
+        }
+        
+        function updateReqStatDisplay(statName) {
+            const slider = document.getElementById(`req${statName.charAt(0).toUpperCase() + statName.slice(1)}`);
+            const display = document.getElementById(`req${statName.charAt(0).toUpperCase() + statName.slice(1)}Value`);
+            
+            if (!slider || !display) return;
+            
+            display.textContent = slider.value;
+            
+            // Update color based on requirement level
+            const value = parseInt(slider.value);
+            let color;
+            if (value === 0) color = '#6c7293';
+            else if (value <= 10) color = '#00ff88';
+            else if (value <= 20) color = '#ffa500';
+            else color = '#ff3366';
+            
+            display.style.background = `linear-gradient(135deg, ${color}, ${color}aa)`;
+            updateMissionPreview();
+        }
+        
+        function addMissionSpecialization() {
+            const input = document.getElementById('missionNewSpecialization');
+            const spec = input.value.trim();
+            
+            if (spec && !missionSpecializations.includes(spec)) {
+                missionSpecializations.push(spec);
+                input.value = '';
+                renderMissionSpecializations();
+                updateMissionPreview();
+            }
+        }
+        
+        function removeMissionSpecialization(spec) {
+            missionSpecializations = missionSpecializations.filter(s => s !== spec);
+            renderMissionSpecializations();
+            updateMissionPreview();
+        }
+        
+        function renderMissionSpecializations() {
+            const container = document.getElementById('missionSpecializationsList');
+            container.innerHTML = missionSpecializations.map(spec => 
+                `<span class="selected-asset-tag" style="cursor: pointer;" onclick="removeMissionSpecialization('${spec}')">${spec} ×</span>`
+            ).join('');
+        }
+        
+        function addRiskFactor() {
+            const input = document.getElementById('missionNewRiskFactor');
+            const factor = input.value.trim();
+            
+            if (factor && !missionRiskFactors.includes(factor)) {
+                missionRiskFactors.push(factor);
+                input.value = '';
+                renderMissionRiskFactors();
+                updateMissionPreview();
+            }
+        }
+        
+        function removeRiskFactor(factor) {
+            missionRiskFactors = missionRiskFactors.filter(f => f !== factor);
+            renderMissionRiskFactors();
+            updateMissionPreview();
+        }
+        
+        function renderMissionRiskFactors() {
+            const container = document.getElementById('missionRiskFactorsList');
+            container.innerHTML = missionRiskFactors.map(factor => 
+                `<span class="selected-asset-tag" style="cursor: pointer; background: var(--accent-red);" onclick="removeRiskFactor('${factor}')">${factor} ×</span>`
+            ).join('');
+        }
+        
+        function updateMissionPreview() {
+            const preview = document.getElementById('missionPreviewCard');
+            const codename = document.getElementById('missionCodename').value || 'NEW MISSION';
+            const classification = document.getElementById('missionClassification').value;
+            const objective = document.getElementById('missionObjective').value || 'Classified mission objective';
+            const target = document.getElementById('missionTarget').value || 'Unknown Target';
+            const riskLevel = document.getElementById('missionRiskLevel').value;
+            const difficulty = document.getElementById('missionDifficulty').value;
+            const duration = document.getElementById('missionDuration').value;
+            const minAssets = document.getElementById('missionMinAssets').value;
+            const priority = document.getElementById('missionPriority').value;
+            
+            // Calculate total required stats
+            const totalReqStats = ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].reduce((sum, stat) => {
+                const element = document.getElementById(`req${stat.charAt(0).toUpperCase() + stat.slice(1)}`);
+                return sum + parseInt(element ? element.value : 0);
+            }, 0);
+            
+            preview.innerHTML = `
+                <div class="mission-card" style="background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border-color); border-left: 4px solid var(--accent-amber); border-radius: 8px; padding: 1rem; transition: all 0.3s ease;">
+                    <div class="mission-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                        <div class="mission-title" style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; letter-spacing: 1px;">${codename}</div>
+                        <div class="mission-classification" style="padding: 0.2rem 0.6rem; background: rgba(255, 51, 102, 0.2); color: var(--danger); border: 1px solid var(--danger); border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">${classification}</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+                        ${objective.substring(0, 100)}${objective.length > 100 ? '...' : ''}
+                    </div>
+                    
+                    <div class="mission-details" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="detail-item" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: rgba(0, 0, 0, 0.3); border-radius: 6px;">
+                            <span class="detail-label" style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Target</span>
+                            <span class="detail-value" style="font-weight: 600; color: var(--text-primary);">${target}</span>
+                        </div>
+                        <div class="detail-item" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: rgba(0, 0, 0, 0.3); border-radius: 6px;">
+                            <span class="detail-label" style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Priority</span>
+                            <span class="detail-value" style="font-weight: 600; color: var(--text-primary);">${priority}</span>
+                        </div>
+                        <div class="detail-item" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: rgba(0, 0, 0, 0.3); border-radius: 6px;">
+                            <span class="detail-label" style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Risk Level</span>
+                            <div class="risk-meter" style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div class="risk-bars" style="display: flex; gap: 2px;">
+                                    ${generateRiskBars(riskLevel)}
+                                </div>
+                                <span class="detail-value" style="font-weight: 600; color: var(--text-primary);">${riskLevel}</span>
+                            </div>
+                        </div>
+                        <div class="detail-item" style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; background: rgba(0, 0, 0, 0.3); border-radius: 6px;">
+                            <span class="detail-label" style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Duration</span>
+                            <span class="detail-value" style="font-weight: 600; color: var(--text-primary);">${duration}h</span>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid var(--accent-blue); border-radius: 6px; padding: 1rem;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; text-align: center;">
+                            <div>
+                                <div style="font-size: 1.2rem; font-weight: 700; color: var(--accent-blue);">${minAssets}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Min Assets</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.2rem; font-weight: 700; color: var(--accent-amber);">${difficulty}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Difficulty</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.2rem; font-weight: 700; color: var(--accent-green);">${totalReqStats}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Required Stats</div>
+                            </div>
+                        </div>
+                        
+                        ${missionSpecializations.length > 0 ? `
+                            <div style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                                <strong>Required Specializations:</strong> ${missionSpecializations.join(', ')}
+                            </div>
+                        ` : ''}
+                        
+                        ${missionRiskFactors.length > 0 ? `
+                            <div style="margin-top: 0.5rem;">
+                                <strong>Risk Factors:</strong> ${missionRiskFactors.join(', ')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function generateRiskBars(riskLevel) {
+            const riskLevels = { 'LOW': 2, 'MEDIUM': 3, 'HIGH': 4, 'EXTREME': 5 };
+            const activeCount = riskLevels[riskLevel] || 3;
+            
+            let bars = '';
+            for (let i = 1; i <= 5; i++) {
+                bars += `<div class="risk-bar" style="width: 4px; height: 16px; background: ${i <= activeCount ? 'var(--danger)' : 'var(--border-color)'}; border-radius: 2px; ${i <= activeCount ? 'box-shadow: 0 0 8px rgba(255, 51, 102, 0.5);' : ''}"></div>`;
+            }
+            return bars;
+        }
+        
+        async function saveMissionFromEditor() {
+            if (!intelligenceAPI.canWrite()) {
+                showNotification('GitHub authentication required', 'error');
+                return;
+            }
+            
+            try {
+                // Collect required stats
+                const requiredStats = {};
+                ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].forEach(stat => {
+                    const element = document.getElementById(`req${stat.charAt(0).toUpperCase() + stat.slice(1)}`);
+                    requiredStats[stat] = parseInt(element.value);
+                });
+                
+                const missionData = {
+                    codename: document.getElementById('missionCodename').value,
+                    classification: document.getElementById('missionClassification').value,
+                    priority: document.getElementById('missionPriority').value,
+                    objective: {
+                        primary: document.getElementById('missionObjective').value,
+                        secondary: []
+                    },
+                    target: {
+                        location: {
+                            realm: document.getElementById('missionTarget').value,
+                            region: document.getElementById('missionRealm').value
+                        },
+                        difficulty: parseInt(document.getElementById('missionDifficulty').value),
+                        time_sensitivity: document.getElementById('missionTimeSensitivity').value
+                    },
+                    requirements: {
+                        minimum_agents: parseInt(document.getElementById('missionMinAssets').value),
+                        required_stats: requiredStats,
+                        required_specializations: missionSpecializations
+                    },
+                    timeline: {
+                        estimated_duration_hours: parseInt(document.getElementById('missionDuration').value),
+                        deployment_window_start: document.getElementById('missionWindowStart').value ? new Date(document.getElementById('missionWindowStart').value).toISOString() : new Date().toISOString(),
+                        deployment_window_end: document.getElementById('missionWindowEnd').value ? new Date(document.getElementById('missionWindowEnd').value).toISOString() : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    risks: {
+                        level: document.getElementById('missionRiskLevel').value,
+                        factors: missionRiskFactors,
+                        consequences: {
+                            failure: document.getElementById('missionFailureConsequence').value,
+                            partial_success: document.getElementById('missionPartialConsequence').value,
+                            success: document.getElementById('missionSuccessConsequence').value
+                        }
+                    },
+                    intelligence_rewards: {
+                        partial_1: [document.getElementById('missionPartialIntel').value],
+                        complete_success: [document.getElementById('missionCompleteIntel').value]
+                    },
+                    deployment: {
+                        status: document.getElementById('missionStatus').value,
+                        assigned_assets: [],
+                        deployment_date: null,
+                        expected_completion: null
+                    }
+                };
+                
+                showNotification('Saving mission...', 'warning');
+                
+                if (currentEditingMission) {
+                    // Update existing mission
+                    await intelligenceAPI.updateOperation(currentEditingMission.operation_id, missionData);
+                    showNotification(`Mission "${missionData.codename}" updated successfully!`, 'success');
+                } else {
+                    // Create new mission
+                    await intelligenceAPI.createOperation(missionData);
+                    showNotification(`Mission "${missionData.codename}" created successfully!`, 'success');
+                }
+                
+                closeMissionEditor();
+                await loadAllGMData();
+                
+            } catch (error) {
+                console.error('Failed to save mission:', error);
+                showNotification(`Failed to save mission: ${error.message}`, 'error');
+            }
+        }
+        
+        function closeMissionEditor() {
+            document.getElementById('missionEditorModal').classList.remove('active');
+            currentEditingMission = null;
+        }
+        
+        function deleteCurrentMission() {
+            if (currentEditingMission && confirm(`Are you sure you want to delete mission "${currentEditingMission.codename}"?\n\nThis action cannot be undone.`)) {
+                showNotification('Delete functionality requires GitHub API enhancement', 'warning');
+                showNotification('For now, manually delete the file from GitHub repository', 'warning');
+                // TODO: Implement actual file deletion when GitHub delete API is added
+            }
+        }
+        
+        // Original modal functions for backward compatibility
         async function createNewAsset(event) {
             event.preventDefault();
             
@@ -1933,7 +2626,7 @@
                     return;
                 }
                 
-                if (confirm(`Process payroll of $${totalPayroll.toLocaleString()} for ${assets.length} assets?`)) {
+                if (confirm(`Process payroll of ${totalPayroll.toLocaleString()} for ${assets.length} assets?`)) {
                     showNotification('Processing payroll...', 'warning');
                     
                     await intelligenceAPI.updateGameState({
@@ -1944,7 +2637,7 @@
                         }
                     });
                     
-                    showNotification(`Payroll processed: $${totalPayroll.toLocaleString()} paid to ${assets.length} assets`, 'success');
+                    showNotification(`Payroll processed: ${totalPayroll.toLocaleString()} paid to ${assets.length} assets`, 'success');
                     await loadTreasuryManagement();
                 }
                 
@@ -1966,11 +2659,6 @@
             
             const randomEvent = events[Math.floor(Math.random() * events.length)];
             alert(`Random Event Generated:\n\n${randomEvent}\n\nConsider how this affects your ongoing operations and story.`);
-        }
-        
-        function editMission(missionId) {
-            showNotification('Mission editing interface coming soon!', 'warning');
-            // TODO: Implement mission editing interface
         }
         
         function checkAuthAndRun(func) {
@@ -2034,15 +2722,23 @@
             }
         });
         
-        // Initialize asset preview when DOM loads
+        // Initialize editors when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize stat displays when the editor opens
+            // Initialize stat displays when the editors open
             setTimeout(() => {
                 if (document.getElementById('assetEditorModal')) {
                     ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].forEach(stat => {
                         updateAssetStatDisplay(stat);
                     });
                     updateAssetPreview();
+                }
+                
+                if (document.getElementById('missionEditorModal')) {
+                    ['skill', 'stealth', 'combat', 'tech', 'social', 'will'].forEach(stat => {
+                        updateReqStatDisplay(stat);
+                    });
+                    updateDifficultyDisplay();
+                    updateMissionPreview();
                 }
             }, 100);
         });
