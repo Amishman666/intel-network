@@ -1,23 +1,18 @@
-# File Path: /data/game_state.yml
----
 game_info:
-  campaign_name: "Shadows of Chicago"
-  start_date: "2024-01-15"
-  current_date: "2024-05-23"
-  game_master: "Handler-Prime"
-  
+  campaign_name: Shadows of Chicago
+  start_date: '2024-01-15'
+  current_date: '2024-05-23'
+  game_master: Handler-Prime
 treasury:
-  current_funds: 500000
+  current_funds: 497500
   monthly_income: 125000
   monthly_expenses: 0
-  last_payroll_date: null
+  last_payroll_date: '2025-05-25'
   next_payroll_date: null
-  
 security:
-  alert_level: "DEFCON 3"
-  threat_assessment: "NORMAL"
+  alert_level: DEFCON 3
+  threat_assessment: NORMAL
   recent_compromises: []
-  
 network_stats:
   total_assets: 0
   available_assets: 0
@@ -28,20 +23,15 @@ network_stats:
   active_operations: 0
   completed_operations: 0
   failed_operations: 0
-  
 active_timers: []
-
 faction_standing:
   chicago_pd: 5
   winter_court: 3
   summer_court: 3
   white_council: 4
   chicago_outfit: 3
-  
 recent_events: []
-
 unlocked_features:
-  - "Basic Operations"
-  - "Mortal Coil Access"
-  
+  - Basic Operations
+  - Mortal Coil Access
 achievements: []
