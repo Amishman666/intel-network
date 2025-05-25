@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- File Path: /docs/intelligence.html -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTELLIGENCE DATABASE // CLASSIFIED</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --primary-bg: #0a0b0d;
+            --secondary-bg: #1a1d23;
+            --tertiary-bg: #252830;
+            --accent-blue: #00d4ff;
+            --accent-amber: #ffa500;
+            --accent-red: #ff3366;
+            --accent-green: #00ff88;
+            --text-primary: #ffffff;
+            --text-secondary: #b8bcc8;
+            --text-muted: #6c7293;
+            --border-color: #3d4147;
+            --glow-blue: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.03) 0%, transparent 50%);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+            border-bottom: 2px solid var(--accent-blue);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--accent-blue);
+            text-shadow: var(--glow-blue);
+            letter-spacing: 2px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            box-shadow: var(--glow-blue);
+        }
+        
+        .nav-link.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            box-shadow: var(--glow-blue);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .intelligence-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 120px);
+        }
+        
+        .panel {
+            background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--tertiary-bg) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+        }
+        
+        .panel-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+        
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+        
+        .filter-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .filter-input, .filter-select {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+        
+        .mission-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .mission-tag {
+            padding: 0.25rem 0.5rem;
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mission-tag:hover {
+            background: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+        
+        .mission-tag.active {
+            background: var(--accent-blue);
+            color: var(--primary-bg);
+        }
+        
+        .intelligence-list {
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+        }
+        
+        .intel-entry {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .intel-entry:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .intel-entry.selected {
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: var(--glow-blue);
+        }
+        
+        .intel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+        
+        .intel-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        .intel-classification {
+            padding: 0.2rem 0.5rem;
+            background: rgba(255, 51, 102, 0.2);
+            color: var(--accent-red);
+            border: 1px solid var(--accent-red);
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .intel-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        
+        .intel-preview {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .intel-detail {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            padding: 2rem;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        
+        .intel-detail-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .intel-detail-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        .intel-detail-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+        }
+        
+        .meta-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        
+        .meta-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .intel-content {
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            font-size: 1rem;
+        }
+        
+        .no-selection {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        
+        .no-results {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 2rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .intelligence-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-brain"></i> INTELLIGENCE DATABASE
+            </div>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">← Back to Command</a>
+                <a href="intelligence.html" class="nav-link active">Intelligence</a>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="intelligence-grid">
+            <!-- Filters and Intelligence List -->
+            <div class="panel">
+                <h2 class="panel-title"><i class="fas fa-filter"></i> Intelligence Filters</h2>
+                
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label class="filter-label">Search Intelligence</label>
+                        <input type="text" id="searchFilter" class="filter-input" placeholder="Search titles and content..." onkeyup="filterIntelligence()">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Source Mission</label>
+                        <select id="missionFilter" class="filter-select" onchange="filterIntelligence()">
+                            <option value="">All Missions</option>
+                            <!-- Populated by JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Date Range</label>
+                        <select id="dateFilter" class="filter-select" onchange="filterIntelligence()">
+                            <option value="">All Dates</option>
+                            <option value="week">Last Week</option>
+                            <option value="month">Last Month</option>
+                            <option value="quarter">Last Quarter</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="intelligence-list" id="intelligenceList">
+                    <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        <i class="fas fa-satellite-dish fa-spin fa-2x"></i>
+                        <p style="margin-top: 1rem;">Loading intelligence database...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Intelligence Detail View -->
+            <div class="panel">
+                <div id="intelligenceDetail">
+                    <div class="no-selection">
+                        <i class="fas fa-brain fa-3x" style="color: var(--accent-blue); opacity: 0.3;"></i>
+                        <h3 style="margin: 1rem 0; font-family: 'Orbitron', monospace;">SELECT INTELLIGENCE ENTRY</h3>
+                        <p>Choose an intelligence entry from the list to view detailed information</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="js/data-loader.js"></script>
+    
+    <script>
+        let allIntelligence = [];
+        let filteredIntelligence = [];
+        let allMissions = [];
+        let selectedIntelId = null;
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeIntelligenceView();
+        });
+        
+        async function initializeIntelligenceView() {
+            try {
+                await loadAllData();
+                populateMissionFilter();
+                displayIntelligence();
+                
+            } catch (error) {
+                console.error('Failed to initialize intelligence view:', error);
+                showErrorState();
+            }
+        }
+        
+        async function loadAllData() {
+            try {
+                // Load intelligence and missions
+                const [intelligence, missions] = await Promise.all([
+                    intelligenceAPI.loadIntelligence(false, true), // Player visible only
+                    intelligenceAPI.loadOperations()
+                ]);
+                
+                allIntelligence = intelligence;
+                allMissions = missions;
+                filteredIntelligence = [...allIntelligence];
+                
+                console.log(`Loaded ${intelligence.length} intelligence entries and ${missions.length} missions`);
+                
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                throw error;
+            }
+        }
+        
+        function populateMissionFilter() {
+            const select = document.getElementById('missionFilter');
+            const missionIds = [...new Set(allIntelligence.map(intel => intel.source_mission))];
+            
+            // Clear existing options except the first one
+            select.innerHTML = '<option value="">All Missions</option>';
+            
+            missionIds.forEach(missionId => {
+                if (missionId) {
+                    const mission = allMissions.find(m => m.operation_id === missionId);
+                    const option = document.createElement('option');
+                    option.value = missionId;
+                    option.textContent = mission ? mission.codename : missionId;
+                    select.appendChild(option);
+                }
+            });
+        }
+        
+        function filterIntelligence() {
+            const searchTerm = document.getElementById('searchFilter').value.toLowerCase();
+            const missionFilter = document.getElementById('missionFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            
+            filteredIntelligence = allIntelligence.filter(intel => {
+                // Search filter
+                const matchesSearch = searchTerm === '' || 
+                    intel.title.toLowerCase().includes(searchTerm) ||
+                    intel.content.toLowerCase().includes(searchTerm);
+                
+                // Mission filter
+                const matchesMission = missionFilter === '' || 
+                    intel.source_mission === missionFilter;
+                
+                // Date filter
+                let matchesDate = true;
+                if (dateFilter && intel.created_date) {
+                    const intelDate = new Date(intel.created_date);
+                    const now = new Date();
+                    const daysDiff = (now - intelDate) / (1000 * 60 * 60 * 24);
+                    
+                    switch (dateFilter) {
+                        case 'week':
+                            matchesDate = daysDiff <= 7;
+                            break;
+                        case 'month':
+                            matchesDate = daysDiff <= 30;
+                            break;
+                        case 'quarter':
+                            matchesDate = daysDiff <= 90;
+                            break;
+                    }
+                }
+                
+                return matchesSearch && matchesMission && matchesDate;
+            });
+            
+            displayIntelligence();
+        }
+        
+        function displayIntelligence() {
+            const container = document.getElementById('intelligenceList');
+            container.innerHTML = '';
+            
+            if (filteredIntelligence.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search fa-2x"></i>
+                        <p style="margin-top: 1rem;">No intelligence entries found</p>
+                        <p style="font-size: 0.9rem;">Try adjusting your filters</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by date (newest first)
+            const sortedIntel = filteredIntelligence.sort((a, b) => 
+                new Date(b.created_date || 0) - new Date(a.created_date || 0)
+            );
+            
+            sortedIntel.forEach(intel => {
+                const entry = createIntelligenceEntry(intel);
+                container.appendChild(entry);
+            });
+        }
+        
+        function createIntelligenceEntry(intel) {
+            const entry = document.createElement('div');
+            entry.className = 'intel-entry';
+            entry.onclick = () => selectIntelligence(intel);
+            
+            const mission = allMissions.find(m => m.operation_id === intel.source_mission);
+            const preview = intel.content ? intel.content.substring(0, 150) + '...' : 'No content available';
+            
+            entry.innerHTML = `
+                <div class="intel-header">
+                    <div class="intel-title">${intel.title || 'Untitled'}</div>
+                    <div class="intel-classification">${intel.visibility?.classification || 'CLASSIFIED'}</div>
+                </div>
+                <div class="intel-meta">
+                    <i class="fas fa-calendar"></i> ${formatDate(intel.created_date)}
+                    <span style="margin-left: 1rem;">
+                        <i class="fas fa-crosshairs"></i> ${mission ? mission.codename : intel.source_mission || 'Unknown Mission'}
+                    </span>
+                </div>
+                <div class="intel-preview">${preview}</div>
+            `;
+            
+            return entry;
+        }
+        
+        function selectIntelligence(intel) {
+            // Clear previous selection
+            document.querySelectorAll('.intel-entry').forEach(entry => {
+                entry.classList.remove('selected');
+            });
+            
+            // Select new entry
+            event.target.closest('.intel-entry').classList.add('selected');
+            selectedIntelId = intel.intelligence_id;
+            
+            // Display detailed view
+            displayIntelligenceDetail(intel);
+        }
+        
+        function displayIntelligenceDetail(intel) {
+            const container = document.getElementById('intelligenceDetail');
+            const mission = allMissions.find(m => m.operation_id === intel.source_mission);
+            
+            container.innerHTML = `
+                <div class="intel-detail">
+                    <div class="intel-detail-header">
+                        <div class="intel-detail-title">${intel.title || 'Untitled Intelligence'}</div>
+                        <div class="intel-detail-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Classification</span>
+                                <span class="meta-value">${intel.visibility?.classification || 'CLASSIFIED'}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Date Acquired</span>
+                                <span class="meta-value">${formatDate(intel.created_date)}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Source Mission</span>
+                                <span class="meta-value">${mission ? mission.codename : intel.source_mission || 'Unknown'}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Intelligence ID</span>
+                                <span class="meta-value">${intel.intelligence_id}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="intel-content">${intel.content || 'No detailed content available.'}</div>
+                </div>
+            `;
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown Date';
+            
+            const date = new Date(dateString);
+            const now = new Date();
+            const daysDiff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+            
+            if (daysDiff === 0) return 'Today';
+            if (daysDiff === 1) return 'Yesterday';
+            if (daysDiff < 7) return `${daysDiff} days ago`;
+            if (daysDiff < 30) return `${Math.floor(daysDiff / 7)} weeks ago`;
+            if (daysDiff < 365) return `${Math.floor(daysDiff / 30)} months ago`;
+            
+            return date.toLocaleDateString();
+        }
+        
+        function showErrorState() {
+            const container = document.getElementById('intelligenceList');
+            container.innerHTML = `
+                <div style="text-align: center; color: var(--accent-red); padding: 2rem;">
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    <p style="margin-top: 1rem;">Failed to load intelligence database</p>
+                    <p style="font-size: 0.9rem;">Check your connection and try refreshing</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
