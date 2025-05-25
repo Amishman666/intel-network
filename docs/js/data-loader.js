@@ -178,6 +178,13 @@ class IntelligenceNetworkAPI {
     }
     
     /**
+     * Generate unique intelligence ID
+     */
+    generateIntelligenceId() {
+        return `INTEL-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
+    }
+    
+    /**
      * Create new asset file
      */
     async createAsset(assetData) {
@@ -399,6 +406,58 @@ class IntelligenceNetworkAPI {
     }
     
     /**
+     * Create new intelligence entry
+     */
+    async createIntelligence(intelligenceData) {
+        if (!this.canWrite()) {
+            throw new Error('GitHub token required to create intelligence');
+        }
+        
+        // Generate intelligence data with defaults
+        const intelligence = {
+            intelligence_id: intelligenceData.intelligence_id || this.generateIntelligenceId(),
+            title: intelligenceData.title || 'Untitled Intelligence',
+            source_mission: intelligenceData.source_mission || '',
+            created_date: new Date().toISOString().split('T')[0],
+            created_by: 'Handler-Prime',
+            
+            visibility: {
+                player_visible: intelligenceData.visibility?.player_visible !== false,
+                classification: intelligenceData.visibility?.classification || 'CLASSIFIED'
+            },
+            
+            content: intelligenceData.content || '',
+            
+            metadata: {
+                filename: `intel_${intelligenceData.intelligence_id || Date.now()}.yml`,
+                last_updated: new Date().toISOString()
+            },
+            
+            tags: intelligenceData.tags || [],
+            notes: intelligenceData.notes || ''
+        };
+        
+        // Generate filename
+        const filename = `intel_${intelligence.intelligence_id.toLowerCase().replace(/[^a-z0-9]/g, '_')}.yml`;
+        const filePath = `data/intelligence/${filename}`;
+        
+        // Convert to YAML
+        const yamlContent = this.yamlParser.dump(intelligence, { indent: 2 });
+        
+        // Create file in GitHub
+        await this.writeFile(
+            filePath,
+            yamlContent,
+            `Create intelligence: ${intelligence.title}`
+        );
+        
+        // Update cache
+        this.cache.intelligence.set(intelligence.intelligence_id, intelligence);
+        
+        return intelligence;
+    }
+    
+    /**
      * Update existing asset
      */
     async updateAsset(assetId, updates) {
@@ -478,6 +537,51 @@ class IntelligenceNetworkAPI {
         this.cache.operations.set(operationId, updatedOperation);
         
         return updatedOperation;
+    }
+    
+    /**
+     * Update existing intelligence
+     */
+    async updateIntelligence(intelligenceId, updates) {
+        if (!this.canWrite()) {
+            throw new Error('GitHub token required to update intelligence');
+        }
+        
+        // Get current intelligence
+        const allIntel = await this.loadIntelligence();
+        const intelligence = allIntel.find(intel => intel.intelligence_id === intelligenceId);
+        
+        if (!intelligence) {
+            throw new Error(`Intelligence ${intelligenceId} not found`);
+        }
+        
+        // Apply updates
+        const updatedIntelligence = { ...intelligence, ...updates };
+        updatedIntelligence.metadata = updatedIntelligence.metadata || {};
+        updatedIntelligence.metadata.last_updated = new Date().toISOString();
+        
+        // Generate filename and path
+        const filename = intelligence._filename;
+        const filePath = intelligence._filepath;
+        
+        // Get current file SHA for update
+        const { sha } = await this.fetchFile(filePath);
+        
+        // Convert to YAML
+        const yamlContent = this.yamlParser.dump(updatedIntelligence, { indent: 2 });
+        
+        // Update file in GitHub
+        await this.writeFile(
+            filePath,
+            yamlContent,
+            `Update intelligence: ${updatedIntelligence.title}`,
+            sha
+        );
+        
+        // Update cache
+        this.cache.intelligence.set(intelligenceId, updatedIntelligence);
+        
+        return updatedIntelligence;
     }
     
     /**
@@ -668,6 +772,54 @@ class IntelligenceNetworkAPI {
     }
     
     /**
+     * Load all intelligence entries
+     */
+    async loadIntelligence(forceRefresh = false, playerOnly = false) {
+        if (!forceRefresh && this.cache.intelligence.size > 0 && !playerOnly) {
+            return Array.from(this.cache.intelligence.values());
+        }
+        
+        try {
+            const intelFiles = await this.listDirectory('data/intelligence');
+            const intelligence = [];
+            
+            for (const file of intelFiles) {
+                try {
+                    const { content } = await this.fetchFile(file.path);
+                    const intelData = this.parseYAML(content);
+                    
+                    // Add metadata
+                    intelData._filename = file.name;
+                    intelData._filepath = file.path;
+                    intelData._lastModified = file.sha;
+                    
+                    // Filter for player visibility if requested
+                    if (playerOnly && intelData.visibility?.player_visible === false) {
+                        continue;
+                    }
+                    
+                    intelligence.push(intelData);
+                    
+                    // Only cache if not filtering for player-only
+                    if (!playerOnly) {
+                        this.cache.intelligence.set(intelData.intelligence_id || file.name, intelData);
+                    }
+                    
+                } catch (error) {
+                    console.error(`Failed to load intelligence ${file.name}:`, error);
+                }
+            }
+            
+            console.log(`Loaded ${intelligence.length} intelligence entries${playerOnly ? ' (player visible only)' : ''}`);
+            return intelligence;
+            
+        } catch (error) {
+            console.error('Failed to load intelligence:', error);
+            return [];
+        }
+    }
+    
+    /**
      * Load game state
      */
     async loadGameState(forceRefresh = false) {
@@ -733,6 +885,19 @@ class IntelligenceNetworkAPI {
     }
     
     /**
+     * Get specific intelligence by ID
+     */
+    async getIntelligence(intelligenceId) {
+        if (this.cache.intelligence.has(intelligenceId)) {
+            return this.cache.intelligence.get(intelligenceId);
+        }
+        
+        // Try to load all intelligence first
+        await this.loadIntelligence();
+        return this.cache.intelligence.get(intelligenceId) || null;
+    }
+    
+    /**
      * Get assets by status
      */
     async getAssetsByStatus(status) {
@@ -763,12 +928,30 @@ class IntelligenceNetworkAPI {
     }
     
     /**
+     * Get intelligence by source mission
+     */
+    async getIntelligenceByMission(missionId) {
+        const intelligence = await this.loadIntelligence();
+        return intelligence.filter(intel => 
+            intel.source_mission === missionId
+        );
+    }
+    
+    /**
+     * Get player-visible intelligence only
+     */
+    async getPlayerIntelligence() {
+        return await this.loadIntelligence(false, true);
+    }
+    
+    /**
      * Calculate network statistics
      */
     async calculateNetworkStats() {
-        const [assets, operations] = await Promise.all([
+        const [assets, operations, intelligence] = await Promise.all([
             this.loadAssets(),
-            this.loadOperations()
+            this.loadOperations(),
+            this.loadIntelligence()
         ]);
         
         const stats = {
@@ -779,6 +962,8 @@ class IntelligenceNetworkAPI {
             captured_assets: assets.filter(a => a.status?.current === 'captured').length,
             active_operations: operations.filter(op => op.deployment?.status === 'ACTIVE').length,
             completed_operations: operations.filter(op => op.deployment?.status === 'COMPLETED').length,
+            total_intelligence: intelligence.length,
+            player_visible_intelligence: intelligence.filter(intel => intel.visibility?.player_visible !== false).length,
             total_monthly_costs: assets.reduce((sum, asset) => 
                 sum + (asset.costs?.monthly_salary || 0), 0
             )
@@ -862,16 +1047,18 @@ class IntelligenceNetworkAPI {
     async refreshAllData() {
         this.cache.assets.clear();
         this.cache.operations.clear();
+        this.cache.intelligence.clear();
         this.cache.gameState = null;
         
-        const [assets, operations, gameState] = await Promise.all([
+        const [assets, operations, gameState, intelligence] = await Promise.all([
             this.loadAssets(true),
             this.loadOperations(true),
-            this.loadGameState(true)
+            this.loadGameState(true),
+            this.loadIntelligence(true)
         ]);
         
         console.log('All data refreshed');
-        return { assets, operations, gameState };
+        return { assets, operations, gameState, intelligence };
     }
 }
 
