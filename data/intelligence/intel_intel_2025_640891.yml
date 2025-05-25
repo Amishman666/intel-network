@@ -1,0 +1,14 @@
+intelligence_id: INTEL-2025-640891
+title: test
+source_mission: OP-2025-660687
+created_date: '2025-05-25'
+created_by: Handler-Prime
+visibility:
+  player_visible: true
+  classification: CLASSIFIED
+content: test
+metadata:
+  filename: intel_INTEL-2025-640891.yml
+  last_updated: '2025-05-25T17:20:40.892Z'
+tags: []
+notes: test
