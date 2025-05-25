@@ -4,7 +4,7 @@ game_info:
   current_date: '2024-05-23'
   game_master: Handler-Prime
 treasury:
-  current_funds: 497500
+  current_funds: 275896
   monthly_income: 125000
   monthly_expenses: 0
   last_payroll_date: '2025-05-25'
